@@ -1,9 +1,11 @@
+import java.util.Scanner;
+
 /**
- * Starts HABI, displays its welcome message, and exits.
+ * Starts HABI and handles commands entered by the user.
  */
 public class Habi {
     /**
-     * Prints HABI's banner, greeting, and farewell message.
+     * Prints HABI's banner and greeting, then echoes commands until the user exits.
      *
      * @param args command-line arguments, which are not used
      */
@@ -20,7 +22,20 @@ public class Habi {
         System.out.println("Hello! I'm HABI.");
         System.out.println("What can I do for you?");
         System.out.println(divider);
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(divider);
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            System.out.println(divider);
+
+            if (command.equals("bye")) {
+                System.out.println("Bye. Hope to see you again soon!");
+                System.out.println(divider);
+                break;
+            }
+
+            System.out.println("     " + command);
+            System.out.println(divider);
+        }
     }
 }
