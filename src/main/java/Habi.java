@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -24,6 +25,8 @@ public class Habi {
         System.out.println(divider);
 
         Scanner scanner = new Scanner(System.in);
+        ArrayList<String> tasks = new ArrayList<>();
+        
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(divider);
@@ -33,8 +36,17 @@ public class Habi {
                 System.out.println(divider);
                 break;
             }
+            if (command.equals("list")) {
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + ". " + tasks.get(i));
+                }
+                System.out.println(divider);
+                continue;
+                
+            }
 
-            System.out.println("     " + command);
+            tasks.add(command);
+            System.out.println("added: " + command);
             System.out.println(divider);
         }
     }
