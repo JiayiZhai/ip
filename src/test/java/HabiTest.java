@@ -9,17 +9,20 @@ import java.nio.charset.StandardCharsets;
  */
 public class HabiTest {
     /**
-     * Verifies that normal commands are echoed and {@code bye} ends the session.
+     * Verifies that marking and unmarking a task changes its displayed status.
      *
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
+        verifyTaskStatusChanges();
+
         InputStream originalInput = System.in;
         PrintStream originalOutput = System.out;
         ByteArrayOutputStream capturedOutput = new ByteArrayOutputStream();
 
         try {
-            System.setIn(new ByteArrayInputStream("list\nbye\n".getBytes(StandardCharsets.UTF_8)));
+            String input = "read book\nreturn book\nmark 2\nunmark 2\nlist\nbye\n";
+            System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
             System.setOut(new PrintStream(capturedOutput, true, StandardCharsets.UTF_8));
 
             Habi.main(new String[0]);
@@ -29,8 +32,34 @@ public class HabiTest {
         }
 
         String output = capturedOutput.toString(StandardCharsets.UTF_8);
-        assertContains(output, "     list", "HABI should echo a regular command.");
+        assertContains(output, "Nice! I've marked this task as done:",
+                "HABI should confirm marking a task as done.");
+        assertContains(output, "[X] return book", "HABI should display a marked task as done.");
+        assertContains(output, "OK, I've marked this task as not done yet:",
+                "HABI should confirm unmarking a task.");
+        assertContains(output, "2.[ ] return book", "HABI should list an unmarked task as not done.");
         assertContains(output, "Bye. Hope to see you again soon!", "HABI should say goodbye for bye.");
+    }
+
+    /**
+     * Verifies that a task object reports its current completion status.
+     */
+    private static void verifyTaskStatusChanges() {
+        try {
+            Class<?> taskClass = Class.forName("Task");
+            Object task = taskClass.getConstructor(String.class).newInstance("read book");
+
+            assertEquals(" ", (String) taskClass.getMethod("getStatusIcon").invoke(task),
+                    "A new task should not be done.");
+            taskClass.getMethod("markAsDone").invoke(task);
+            assertEquals("X", (String) taskClass.getMethod("getStatusIcon").invoke(task),
+                    "A marked task should be done.");
+            taskClass.getMethod("markAsNotDone").invoke(task);
+            assertEquals(" ", (String) taskClass.getMethod("getStatusIcon").invoke(task),
+                    "An unmarked task should not be done.");
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("Task should provide the required task API.", exception);
+        }
     }
 
     /**
@@ -43,6 +72,19 @@ public class HabiTest {
     private static void assertContains(String output, String expected, String message) {
         if (!output.contains(expected)) {
             throw new AssertionError(message + " Expected to find: " + expected);
+        }
+    }
+
+    /**
+     * Asserts that an actual value equals an expected value.
+     *
+     * @param expected expected value
+     * @param actual actual value
+     * @param message explanation shown if the assertion fails
+     */
+    private static void assertEquals(String expected, String actual, String message) {
+        if (!expected.equals(actual)) {
+            throw new AssertionError(message + " Expected: " + expected + ", actual: " + actual);
         }
     }
 }
