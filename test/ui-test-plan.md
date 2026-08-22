@@ -138,3 +138,62 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: delete a task safely
+
+**Aim:** Verify deletion removes the selected task, renumbers the list, and rejects an out-of-range task number.
+
+**Input**
+```text
+todo read book
+deadline return book /by Sunday
+event project meeting /from Mon /to Tue
+delete 2
+delete 5
+list
+bye
+```
+
+**Expected output**
+```text
+____________________________________________________________
+ _   _    _     ____   ___
+| | | |  / \   | __ )   |  |
+| |_| | / _ \  |  _ \  |  |
+|  _  |/ ___ \ | |_) | |  |
+|_| |_|_/   \_\|____/  _|_
+Hello! I'm HABI.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Mon to: Tue)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS! Task number 5 is out of range.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[E][ ] project meeting (from: Mon to: Tue)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```

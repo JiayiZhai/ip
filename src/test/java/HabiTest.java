@@ -49,6 +49,21 @@ public class HabiTest {
                 "HABI should reject an unknown command.");
         assertContains(errorOutput, "1.[T][ ] read book",
                 "Invalid commands should not add or change tasks.");
+
+        String deleteOutput = runHabi("todo read book\n"
+                + "deadline return book /by Sunday\n"
+                + "event project meeting /from Mon /to Tue\n"
+                + "delete 2\ndelete 5\nlist\nbye\n");
+        assertContains(deleteOutput, "Noted. I've removed this task:",
+                "HABI should confirm task deletion.");
+        assertContains(deleteOutput, "[D][ ] return book (by: Sunday)",
+                "HABI should display the removed task.");
+        assertContains(deleteOutput, "Now you have 2 tasks in the list.",
+                "HABI should report the remaining task count.");
+        assertContains(deleteOutput, "OOPS! Task number 5 is out of range.",
+                "HABI should reject an out-of-range deletion.");
+        assertContains(deleteOutput, "2.[E][ ] project meeting (from: Mon to: Tue)",
+                "Deletion should close the numbering gap.");
     }
 
     /**

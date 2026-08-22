@@ -54,6 +54,8 @@ public class Habi {
             updateTaskStatus(command, "mark", tasks, true);
         } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             updateTaskStatus(command, "unmark", tasks, false);
+        } else if (command.equals("delete") || command.startsWith("delete ")) {
+            deleteTask(command, tasks);
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             addTodo(command, tasks);
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
@@ -125,6 +127,22 @@ public class Habi {
             task.markAsNotDone();
             printResponse("OK, I've marked this task as not done yet:", "  " + task);
         }
+    }
+
+    /**
+     * Deletes the requested task after validating its one-based number.
+     *
+     * @param command delete command entered by the user
+     * @param tasks current task list
+     * @throws HabiException when the task number is invalid
+     */
+    private static void deleteTask(String command, ArrayList<Task> tasks)
+            throws HabiException {
+        int taskIndex = parseTaskIndex(command, "delete", tasks.size());
+        Task removedTask = tasks.remove(taskIndex);
+        printResponse("Noted. I've removed this task:", "  " + removedTask,
+                "Now you have " + tasks.size() + " task"
+                        + (tasks.size() == 1 ? "" : "s") + " in the list.");
     }
 
     /**
