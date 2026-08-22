@@ -17,6 +17,7 @@ public class HabiTest {
         verifyTaskStatusChanges();
         verifyTypedTaskRendering();
         verifyTaskSubtypes();
+        verifyHabiExceptionIsChecked();
 
         String output = runHabi("todo read book\n"
                 + "deadline return book /by Sunday\n"
@@ -95,6 +96,16 @@ public class HabiTest {
     }
 
     /**
+     * Verifies that command errors use a checked, recoverable exception type.
+     */
+    private static void verifyHabiExceptionIsChecked() {
+        assertTrue(Exception.class.isAssignableFrom(HabiException.class),
+                "HabiException should be an exception.");
+        assertTrue(!RuntimeException.class.isAssignableFrom(HabiException.class),
+                "HabiException should be checked.");
+    }
+
+    /**
      * Runs one isolated HABI console session and returns its output.
      *
      * @param input commands supplied to HABI
@@ -126,6 +137,15 @@ public class HabiTest {
     private static void assertContains(String output, String expected, String message) {
         if (!output.contains(expected)) {
             throw new AssertionError(message + " Expected to find: " + expected);
+        }
+    }
+
+    /**
+     * Asserts that a condition is true.
+     */
+    private static void assertTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new AssertionError(message);
         }
     }
 

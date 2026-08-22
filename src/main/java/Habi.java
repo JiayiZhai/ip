@@ -29,7 +29,11 @@ public class Habi {
                 printResponse("Bye. Hope to see you again soon!");
                 break;
             }
-            handleCommand(command, tasks);
+            try {
+                handleCommand(command, tasks);
+            } catch (HabiException exception) {
+                printResponse(exception.getMessage());
+            }
         }
     }
 
@@ -38,10 +42,12 @@ public class Habi {
      *
      * @param command trimmed command entered by the user
      * @param tasks current task list
+     * @throws HabiException when the command is invalid
      */
-    private static void handleCommand(String command, ArrayList<Task> tasks) {
+    private static void handleCommand(String command, ArrayList<Task> tasks)
+            throws HabiException {
         if (command.isEmpty()) {
-            printResponse("OOPS! Please enter a command.");
+            throw new HabiException("OOPS! Please enter a command.");
         } else if (command.equals("list")) {
             printTaskList(tasks);
         } else if (command.equals("mark") || command.startsWith("mark ")) {
@@ -55,18 +61,17 @@ public class Habi {
         } else if (command.equals("event") || command.startsWith("event ")) {
             addEvent(command, tasks);
         } else {
-            printResponse("OOPS! I don't know what \"" + command + "\" means.");
+            throw new HabiException("OOPS! I don't know what \"" + command + "\" means.");
         }
     }
 
     /**
      * Adds a todo when its description is present.
      */
-    private static void addTodo(String command, ArrayList<Task> tasks) {
+    private static void addTodo(String command, ArrayList<Task> tasks) throws HabiException {
         String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
-            printResponse("OOPS! The todo description cannot be empty.");
-            return;
+            throw new HabiException("OOPS! The todo description cannot be empty.");
         }
         addTask(new Todo(description), tasks);
     }
@@ -74,12 +79,11 @@ public class Habi {
     /**
      * Adds a deadline when both its description and {@code /by} value are present.
      */
-    private static void addDeadline(String command, ArrayList<Task> tasks) {
+    private static void addDeadline(String command, ArrayList<Task> tasks) throws HabiException {
         String arguments = command.substring("deadline".length()).trim();
         int byPosition = arguments.indexOf(" /by ");
         if (byPosition <= 0 || arguments.substring(byPosition + 5).trim().isEmpty()) {
-            printResponse("OOPS! Use: deadline DESCRIPTION /by DATE_OR_TIME");
-            return;
+            throw new HabiException("OOPS! Use: deadline DESCRIPTION /by DATE_OR_TIME");
         }
         String description = arguments.substring(0, byPosition).trim();
         String by = arguments.substring(byPosition + 5).trim();
@@ -89,7 +93,7 @@ public class Habi {
     /**
      * Adds an event when its description, start, and end values are present.
      */
-    private static void addEvent(String command, ArrayList<Task> tasks) {
+    private static void addEvent(String command, ArrayList<Task> tasks) throws HabiException {
         String arguments = command.substring("event".length()).trim();
         int fromPosition = arguments.indexOf(" /from ");
         int toPosition = fromPosition < 0 ? -1 : arguments.indexOf(" /to ", fromPosition + 7);
@@ -99,8 +103,7 @@ public class Habi {
                 || toPosition + 5 >= arguments.length()
                 || arguments.substring(toPosition + 5).trim().isEmpty();
         if (isInvalid) {
-            printResponse("OOPS! Use: event DESCRIPTION /from START /to END");
-            return;
+            throw new HabiException("OOPS! Use: event DESCRIPTION /from START /to END");
         }
         String description = arguments.substring(0, fromPosition).trim();
         String from = arguments.substring(fromPosition + 7, toPosition).trim();
@@ -112,12 +115,8 @@ public class Habi {
      * Marks or unmarks the requested task after validating its one-based number.
      */
     private static void updateTaskStatus(String command, String keyword,
-            ArrayList<Task> tasks, boolean shouldMark) {
-        Integer taskIndex = parseTaskIndexOrPrintError(command, keyword, tasks.size());
-        if (taskIndex == null) {
-            return;
-        }
-
+            ArrayList<Task> tasks, boolean shouldMark) throws HabiException {
+        int taskIndex = parseTaskIndex(command, keyword, tasks.size());
         Task task = tasks.get(taskIndex);
         if (shouldMark) {
             task.markAsDone();
@@ -129,27 +128,27 @@ public class Habi {
     }
 
     /**
-     * Parses and validates a one-based task number, printing an error when invalid.
+     * Parses and validates a one-based task number.
      *
-     * @return a zero-based task index, or {@code null} after reporting an error
+     * @return a zero-based task index
+     * @throws HabiException when the number is missing, malformed, or out of range
      */
-    private static Integer parseTaskIndexOrPrintError(
-            String command, String keyword, int taskCount) {
+    private static int parseTaskIndex(String command, String keyword, int taskCount)
+            throws HabiException {
         String argument = command.substring(keyword.length()).trim();
         if (argument.isEmpty()) {
-            printResponse("OOPS! Please provide a task number for " + keyword + ".");
-            return null;
+            throw new HabiException(
+                    "OOPS! Please provide a task number for " + keyword + ".");
         }
         try {
             int taskNumber = Integer.parseInt(argument);
             if (taskNumber < 1 || taskNumber > taskCount) {
-                printResponse("OOPS! Task number " + taskNumber + " is out of range.");
-                return null;
+                throw new HabiException(
+                        "OOPS! Task number " + taskNumber + " is out of range.");
             }
             return taskNumber - 1;
         } catch (NumberFormatException exception) {
-            printResponse("OOPS! The task number must be a whole number.");
-            return null;
+            throw new HabiException("OOPS! The task number must be a whole number.");
         }
     }
 
