@@ -2,9 +2,7 @@
  * Represents a task and whether it has been completed.
  */
 public class Task {
-    private final String typeIcon;
     private final String description;
-    private final String timingDetails;
     private boolean isDone;
 
     /**
@@ -13,20 +11,7 @@ public class Task {
      * @param description text describing the task
      */
     public Task(String description) {
-        this("T", description, "");
-    }
-
-    /**
-     * Creates an incomplete task with its display type and optional timing details.
-     *
-     * @param typeIcon one-letter icon that identifies the task type
-     * @param description text describing the task
-     * @param timingDetails formatted timing text, or an empty string when not applicable
-     */
-    public Task(String typeIcon, String description, String timingDetails) {
-        this.typeIcon = typeIcon;
         this.description = description;
-        this.timingDetails = timingDetails;
         this.isDone = false;
     }
 
@@ -63,12 +48,31 @@ public class Task {
     }
 
     /**
+     * Returns the one-letter icon for this task type.
+     *
+     * @return the todo icon by default
+     */
+    protected String getTypeIcon() {
+        return "T";
+    }
+
+    /**
+     * Returns formatted timing details supplied by specialized task types.
+     *
+     * @return an empty string for tasks without timing details
+     */
+    protected String getTimingDetails() {
+        return "";
+    }
+
+    /**
      * Returns the complete user-facing representation of this task.
      *
      * @return task type, completion status, description, and timing details
      */
     @Override
     public String toString() {
-        return "[" + typeIcon + "][" + getStatusIcon() + "] " + description + timingDetails;
+        return "[" + getTypeIcon() + "][" + getStatusIcon() + "] "
+                + description + getTimingDetails();
     }
 }

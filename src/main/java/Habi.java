@@ -63,21 +63,21 @@ public class Habi {
 
             Task task;
             if (command.startsWith("todo ")) {
-                task = new Task("T", command.substring(5), "");
+                task = new Todo(command.substring(5));
             } else if (command.startsWith("deadline ")) {
                 int byPosition = command.indexOf(" /by ");
                 String description = command.substring(9, byPosition);
                 String by = command.substring(byPosition + 5);
-                task = new Task("D", description, " (by: " + by + ")");
+                task = new Deadline(description, by);
             } else if (command.startsWith("event ")) {
                 int fromPosition = command.indexOf(" /from ");
                 int toPosition = command.indexOf(" /to ", fromPosition + 7);
                 String description = command.substring(6, fromPosition);
                 String from = command.substring(fromPosition + 7, toPosition);
                 String to = command.substring(toPosition + 5);
-                task = new Task("E", description, " (from: " + from + " to: " + to + ")");
+                task = new Event(description, from, to);
             } else {
-                task = new Task(command);
+                task = new Todo(command);
             }
             tasks.add(task);
             System.out.println("Got it. I've added this task:");

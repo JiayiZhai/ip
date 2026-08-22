@@ -16,6 +16,7 @@ public class HabiTest {
     public static void main(String[] args) {
         verifyTaskStatusChanges();
         verifyTypedTaskRendering();
+        verifyTaskSubtypes();
 
         InputStream originalInput = System.in;
         PrintStream originalOutput = System.out;
@@ -75,9 +76,23 @@ public class HabiTest {
      * Verifies that a task renders its type, status, description, and timing.
      */
     private static void verifyTypedTaskRendering() {
-        Task deadline = new Task("D", "return book", " (by: Sunday)");
+        Task deadline = new Deadline("return book", "Sunday");
         assertEquals("[D][ ] return book (by: Sunday)", deadline.toString(),
                 "A deadline should include its type and due date.");
+    }
+
+    /**
+     * Verifies that each specialized task supplies its own display details.
+     */
+    private static void verifyTaskSubtypes() {
+        assertEquals("[T][ ] read book", new Todo("read book").toString(),
+                "A todo should use the T type icon.");
+        assertEquals("[D][ ] return book (by: Sunday)",
+                new Deadline("return book", "Sunday").toString(),
+                "A deadline should display its due date.");
+        assertEquals("[E][ ] project meeting (from: Mon 2pm to: 4pm)",
+                new Event("project meeting", "Mon 2pm", "4pm").toString(),
+                "An event should display its start and end times.");
     }
 
     /**
