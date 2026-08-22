@@ -18,25 +18,10 @@ public class HabiTest {
         verifyTypedTaskRendering();
         verifyTaskSubtypes();
 
-        InputStream originalInput = System.in;
-        PrintStream originalOutput = System.out;
-        ByteArrayOutputStream capturedOutput = new ByteArrayOutputStream();
-
-        try {
-            String input = "todo read book\n"
-                    + "deadline return book /by Sunday\n"
-                    + "event project meeting /from Mon 2pm /to 4pm\n"
-                    + "mark 2\nlist\nunmark 2\nlist\nbye\n";
-            System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-            System.setOut(new PrintStream(capturedOutput, true, StandardCharsets.UTF_8));
-
-            Habi.main(new String[0]);
-        } finally {
-            System.setIn(originalInput);
-            System.setOut(originalOutput);
-        }
-
-        String output = capturedOutput.toString(StandardCharsets.UTF_8);
+        String output = runHabi("todo read book\n"
+                + "deadline return book /by Sunday\n"
+                + "event project meeting /from Mon 2pm /to 4pm\n"
+                + "mark 2\nlist\nunmark 2\nlist\nbye\n");
         assertContains(output, "Nice! I've marked this task as done:",
                 "HABI should confirm marking a task as done.");
         assertContains(output, "[D][X] return book (by: Sunday)",
@@ -49,6 +34,20 @@ public class HabiTest {
         assertContains(output, "3.[E][ ] project meeting (from: Mon 2pm to: 4pm)",
                 "HABI should list an event with its timing.");
         assertContains(output, "Bye. Hope to see you again soon!", "HABI should say goodbye for bye.");
+
+        String errorOutput = runHabi("\ntodo\ndeadline return book\n"
+                + "event project meeting /from Mon 2pm\nmark two\nmark 1\n"
+                + "todo read book\nmark 2\nunmark 0\nblah\nlist\nbye\n");
+        assertContains(errorOutput, "OOPS! Please enter a command.",
+                "HABI should reject an empty command.");
+        assertContains(errorOutput, "OOPS! The todo description cannot be empty.",
+                "HABI should reject an empty todo.");
+        assertContains(errorOutput, "OOPS! The task number must be a whole number.",
+                "HABI should reject a non-numeric task number.");
+        assertContains(errorOutput, "OOPS! I don't know what \"blah\" means.",
+                "HABI should reject an unknown command.");
+        assertContains(errorOutput, "1.[T][ ] read book",
+                "Invalid commands should not add or change tasks.");
     }
 
     /**
@@ -93,6 +92,28 @@ public class HabiTest {
         assertEquals("[E][ ] project meeting (from: Mon 2pm to: 4pm)",
                 new Event("project meeting", "Mon 2pm", "4pm").toString(),
                 "An event should display its start and end times.");
+    }
+
+    /**
+     * Runs one isolated HABI console session and returns its output.
+     *
+     * @param input commands supplied to HABI
+     * @return text printed during the session
+     */
+    private static String runHabi(String input) {
+        InputStream originalInput = System.in;
+        PrintStream originalOutput = System.out;
+        ByteArrayOutputStream capturedOutput = new ByteArrayOutputStream();
+
+        try {
+            System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+            System.setOut(new PrintStream(capturedOutput, true, StandardCharsets.UTF_8));
+            Habi.main(new String[0]);
+            return capturedOutput.toString(StandardCharsets.UTF_8);
+        } finally {
+            System.setIn(originalInput);
+            System.setOut(originalOutput);
+        }
     }
 
     /**
