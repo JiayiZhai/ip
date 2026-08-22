@@ -2,6 +2,7 @@
  * Represents a task and whether it has been completed.
  */
 public class Task {
+    private final TaskType type;
     private final String description;
     private boolean isDone;
 
@@ -11,6 +12,17 @@ public class Task {
      * @param description text describing the task
      */
     public Task(String description) {
+        this(TaskType.TODO, description);
+    }
+
+    /**
+     * Creates an incomplete task of the specified kind.
+     *
+     * @param type task kind
+     * @param description text describing the task
+     */
+    protected Task(TaskType type, String description) {
+        this.type = type;
         this.description = description;
         this.isDone = false;
     }
@@ -53,7 +65,7 @@ public class Task {
      * @return the todo icon by default
      */
     protected String getTypeIcon() {
-        return "T";
+        return type.getIcon();
     }
 
     /**

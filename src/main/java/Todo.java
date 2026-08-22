@@ -8,6 +8,6 @@ public class Todo extends Task {
      * @param description text describing the todo
      */
     public Todo(String description) {
-        super(description);
+        super(TaskType.TODO, description);
     }
 }

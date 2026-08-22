@@ -18,6 +18,7 @@ public class HabiTest {
         verifyTypedTaskRendering();
         verifyTaskSubtypes();
         verifyHabiExceptionIsChecked();
+        verifyTaskTypeIcons();
 
         String output = runHabi("todo read book\n"
                 + "deadline return book /by Sunday\n"
@@ -118,6 +119,15 @@ public class HabiTest {
                 "HabiException should be an exception.");
         assertTrue(!RuntimeException.class.isAssignableFrom(HabiException.class),
                 "HabiException should be checked.");
+    }
+
+    /**
+     * Verifies that task kinds are represented by stable enum values and icons.
+     */
+    private static void verifyTaskTypeIcons() {
+        assertEquals("T", TaskType.TODO.getIcon(), "TODO should use the T icon.");
+        assertEquals("D", TaskType.DEADLINE.getIcon(), "DEADLINE should use the D icon.");
+        assertEquals("E", TaskType.EVENT.getIcon(), "EVENT should use the E icon.");
     }
 
     /**
