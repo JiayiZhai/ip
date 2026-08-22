@@ -15,13 +15,17 @@ public class HabiTest {
      */
     public static void main(String[] args) {
         verifyTaskStatusChanges();
+        verifyTypedTaskRendering();
 
         InputStream originalInput = System.in;
         PrintStream originalOutput = System.out;
         ByteArrayOutputStream capturedOutput = new ByteArrayOutputStream();
 
         try {
-            String input = "read book\nreturn book\nmark 2\nunmark 2\nlist\nbye\n";
+            String input = "todo read book\n"
+                    + "deadline return book /by Sunday\n"
+                    + "event project meeting /from Mon 2pm /to 4pm\n"
+                    + "mark 2\nlist\nunmark 2\nlist\nbye\n";
             System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
             System.setOut(new PrintStream(capturedOutput, true, StandardCharsets.UTF_8));
 
@@ -34,10 +38,15 @@ public class HabiTest {
         String output = capturedOutput.toString(StandardCharsets.UTF_8);
         assertContains(output, "Nice! I've marked this task as done:",
                 "HABI should confirm marking a task as done.");
-        assertContains(output, "[X] return book", "HABI should display a marked task as done.");
+        assertContains(output, "[D][X] return book (by: Sunday)",
+                "HABI should display a marked deadline as done.");
         assertContains(output, "OK, I've marked this task as not done yet:",
                 "HABI should confirm unmarking a task.");
-        assertContains(output, "2.[ ] return book", "HABI should list an unmarked task as not done.");
+        assertContains(output, "1.[T][ ] read book", "HABI should list a todo task.");
+        assertContains(output, "2.[D][ ] return book (by: Sunday)",
+                "HABI should list an unmarked deadline.");
+        assertContains(output, "3.[E][ ] project meeting (from: Mon 2pm to: 4pm)",
+                "HABI should list an event with its timing.");
         assertContains(output, "Bye. Hope to see you again soon!", "HABI should say goodbye for bye.");
     }
 
@@ -60,6 +69,15 @@ public class HabiTest {
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("Task should provide the required task API.", exception);
         }
+    }
+
+    /**
+     * Verifies that a task renders its type, status, description, and timing.
+     */
+    private static void verifyTypedTaskRendering() {
+        Task deadline = new Task("D", "return book", " (by: Sunday)");
+        assertEquals("[D][ ] return book (by: Sunday)", deadline.toString(),
+                "A deadline should include its type and due date.");
     }
 
     /**

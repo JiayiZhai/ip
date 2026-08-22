@@ -1,13 +1,14 @@
 # HABI UI Test Plan
 
-## Test case: mark and unmark a task
+## Test case: manage typed tasks
 
-**Aim:** Verify task creation, completion, reversal, listing, and exit through the console.
+**Aim:** Verify creation, listing, marking, and unmarking of todo, deadline, and event tasks.
 
 **Input**
 ```text
-read book
-return book
+todo read book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
 mark 2
 list
 unmark 2
@@ -27,28 +28,39 @@ Hello! I'm HABI.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-added: read book
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
-added: return book
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [X] return book
+  [D][X] return book (by: Sunday)
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[ ] read book
-2.[X] return book
+1.[T][ ] read book
+2.[D][X] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-  [ ] return book
+  [D][ ] return book (by: Sunday)
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[ ] read book
-2.[ ] return book
+1.[T][ ] read book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

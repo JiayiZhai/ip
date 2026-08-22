@@ -6,7 +6,6 @@ import java.util.Scanner;
  */
 public class Habi {
     /**
-     
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
@@ -38,9 +37,7 @@ public class Habi {
             if (command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < tasks.size(); i++) {
-                    Task task = tasks.get(i);
-                    System.out.println((i + 1) + ".[" + task.getStatusIcon() + "] "
-                            + task.getDescription());
+                    System.out.println((i + 1) + "." + tasks.get(i));
                 }
                 System.out.println(divider);
                 continue;
@@ -50,7 +47,7 @@ public class Habi {
                 Task task = tasks.get(taskIndex);
                 task.markAsDone();
                 System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  [" + task.getStatusIcon() + "] " + task.getDescription());
+                System.out.println("  " + task);
                 System.out.println(divider);
                 continue;
             }
@@ -59,13 +56,34 @@ public class Habi {
                 Task task = tasks.get(taskIndex);
                 task.markAsNotDone();
                 System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  [" + task.getStatusIcon() + "] " + task.getDescription());
+                System.out.println("  " + task);
                 System.out.println(divider);
                 continue;
             }
 
-            tasks.add(new Task(command));
-            System.out.println("added: " + command);
+            Task task;
+            if (command.startsWith("todo ")) {
+                task = new Task("T", command.substring(5), "");
+            } else if (command.startsWith("deadline ")) {
+                int byPosition = command.indexOf(" /by ");
+                String description = command.substring(9, byPosition);
+                String by = command.substring(byPosition + 5);
+                task = new Task("D", description, " (by: " + by + ")");
+            } else if (command.startsWith("event ")) {
+                int fromPosition = command.indexOf(" /from ");
+                int toPosition = command.indexOf(" /to ", fromPosition + 7);
+                String description = command.substring(6, fromPosition);
+                String from = command.substring(fromPosition + 7, toPosition);
+                String to = command.substring(toPosition + 5);
+                task = new Task("E", description, " (from: " + from + " to: " + to + ")");
+            } else {
+                task = new Task(command);
+            }
+            tasks.add(task);
+            System.out.println("Got it. I've added this task:");
+            System.out.println("  " + task);
+            System.out.println("Now you have " + tasks.size() + " task"
+                    + (tasks.size() == 1 ? "" : "s") + " in the list.");
             System.out.println(divider);
         }
     }
