@@ -67,6 +67,42 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: save a changed task list
+
+**Aim:** Verify commands that change tasks retain their normal console responses while persistence runs.
+
+**Input**
+```text
+todo read book
+mark 1
+bye
+```
+
+**Expected output**
+```text
+____________________________________________________________
+ _   _    _     ____   ___
+| | | |  / \   | __ )   |  |
+| |_| | / _ \  |  _ \  |  |
+|  _  |/ ___ \ | |_) | |  |
+|_| |_|_/   \_\|____/  _|_
+Hello! I'm HABI.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [T][X] read book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: recover from invalid commands
 
 **Aim:** Verify invalid commands report useful errors, preserve the task list, and allow the session to continue.

@@ -15,8 +15,22 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Returns the deadline value entered by the user.
+     *
+     * @return deadline value
+     */
+    public String getBy() {
+        return by;
+    }
+
     @Override
     protected String getTimingDetails() {
         return " (by: " + by + ")";
+    }
+
+    @Override
+    public String toDataString() {
+        return super.toDataString() + "\t" + by;
     }
 }

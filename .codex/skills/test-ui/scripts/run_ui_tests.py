@@ -79,6 +79,7 @@ def main():
         return 2
 
     with tempfile.TemporaryDirectory(prefix="habi-ui-test-") as class_directory:
+        absolute_class_directory = str(Path(class_directory).resolve())
         compilation = subprocess.run(
             ["javac", "-d", class_directory, *map(str, source_files)],
             capture_output=True, text=True, check=False,
@@ -91,10 +92,11 @@ def main():
         for number, test_case in enumerate(test_cases, start=1):
             input_text = test_case.group("input") + "\n"
             expected_output = test_case.group("expected") + "\n"
-            execution = subprocess.run(
-                ["java", "-cp", class_directory, "Habi"], input=input_text,
-                capture_output=True, text=True, check=False,
-            )
+            with tempfile.TemporaryDirectory(prefix="habi-ui-case-") as case_directory:
+                execution = subprocess.run(
+                    ["java", "-cp", absolute_class_directory, "Habi"], input=input_text,
+                    capture_output=True, text=True, check=False, cwd=case_directory,
+                )
             actual_output = normalise(execution.stdout)
 
             print(f"\n=== Test {number}: {test_case.group('name')} ===")

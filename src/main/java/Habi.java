@@ -1,10 +1,15 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * Starts HABI and handles commands entered by the user.
  */
 public class Habi {
+    private static final Path DATA_FILE_PATH = Path.of("data", "habi.txt");
     private static final String DIVIDER =
             "____________________________________________________________";
     private static final String BANNER = " _   _    _     ____   ___\n"
@@ -22,7 +27,13 @@ public class Habi {
         printGreeting();
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
+        try {
+            tasks = loadTasks();
+        } catch (HabiException exception) {
+            printResponse(exception.getMessage());
+            tasks = new ArrayList<>();
+        }
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
             if (command.equals("bye")) {
@@ -30,7 +41,10 @@ public class Habi {
                 break;
             }
             try {
-                handleCommand(command, tasks);
+                boolean hasChanged = handleCommand(command, tasks);
+                if (hasChanged) {
+                    saveTasks(tasks);
+                }
             } catch (HabiException exception) {
                 printResponse(exception.getMessage());
             }
@@ -44,26 +58,88 @@ public class Habi {
      * @param tasks current task list
      * @throws HabiException when the command is invalid
      */
-    private static void handleCommand(String command, ArrayList<Task> tasks)
+    private static boolean handleCommand(String command, ArrayList<Task> tasks)
             throws HabiException {
         if (command.isEmpty()) {
             throw new HabiException("OOPS! Please enter a command.");
         } else if (command.equals("list")) {
             printTaskList(tasks);
+            return false;
         } else if (command.equals("mark") || command.startsWith("mark ")) {
             updateTaskStatus(command, "mark", tasks, true);
+            return true;
         } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             updateTaskStatus(command, "unmark", tasks, false);
+            return true;
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             deleteTask(command, tasks);
+            return true;
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             addTodo(command, tasks);
+            return true;
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             addDeadline(command, tasks);
+            return true;
         } else if (command.equals("event") || command.startsWith("event ")) {
             addEvent(command, tasks);
+            return true;
         } else {
             throw new HabiException("OOPS! I don't know what \"" + command + "\" means.");
+        }
+    }
+
+    /**
+     * Loads stored tasks, creating the data directory and file on first use.
+     *
+     * @return tasks reconstructed from the data file
+     * @throws HabiException when the data file cannot be loaded
+     */
+    private static ArrayList<Task> loadTasks() throws HabiException {
+        try {
+            Files.createDirectories(DATA_FILE_PATH.getParent());
+            if (Files.notExists(DATA_FILE_PATH)) {
+                Files.createFile(DATA_FILE_PATH);
+            }
+            ArrayList<Task> tasks = new ArrayList<>();
+            for (String line : Files.readAllLines(DATA_FILE_PATH)) {
+                if (!line.isBlank()) {
+                    tasks.add(parseStoredTask(line));
+                }
+            }
+            return tasks;
+        } catch (IOException | RuntimeException exception) {
+            throw new HabiException("OOPS! I could not load tasks from the data file.");
+        }
+    }
+
+    /**
+     * Reconstructs one task from its tab-separated storage fields.
+     */
+    private static Task parseStoredTask(String line) {
+        String[] fields = line.split("\\t", -1);
+        Task task = switch (fields[0]) {
+            case "T" -> new Todo(fields[2]);
+            case "D" -> new Deadline(fields[2], fields[3]);
+            case "E" -> new Event(fields[2], fields[3], fields[4]);
+            default -> throw new IllegalArgumentException("Unknown task type");
+        };
+        if (fields[1].equals("1")) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    /**
+     * Writes every task to the relative data file after a successful change.
+     *
+     * @throws HabiException when the data file cannot be written
+     */
+    private static void saveTasks(ArrayList<Task> tasks) throws HabiException {
+        try {
+            List<String> lines = tasks.stream().map(Task::toDataString).toList();
+            Files.write(DATA_FILE_PATH, lines);
+        } catch (IOException exception) {
+            throw new HabiException("OOPS! I could not save tasks to the data file.");
         }
     }
 

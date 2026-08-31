@@ -60,6 +60,33 @@ public class Task {
     }
 
     /**
+     * Returns this task's kind for persistence.
+     *
+     * @return task kind
+     */
+    public TaskType getType() {
+        return type;
+    }
+
+    /**
+     * Returns whether this task has been completed.
+     *
+     * @return true when completed
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * Returns the fields shared by every task in the storage format.
+     *
+     * @return tab-separated task type, status, and description
+     */
+    public String toDataString() {
+        return type.getIcon() + "\t" + (isDone ? "1" : "0") + "\t" + description;
+    }
+
+    /**
      * Returns the one-letter icon for this task type.
      *
      * @return the todo icon by default
