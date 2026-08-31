@@ -77,4 +77,13 @@ public class Parser {
             throw new HabiException("OOPS! The task number must be a whole number.");
         }
     }
+
+    /** Parses a find command with a non-empty keyword. */
+    public static String parseFindKeyword(String command) throws HabiException {
+        String keyword = command.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new HabiException("OOPS! The find keyword cannot be empty.");
+        }
+        return keyword;
+    }
 }

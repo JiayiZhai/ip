@@ -67,6 +67,55 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: find matching tasks
+
+**Aim:** Verify `find` lists only tasks whose descriptions contain the keyword.
+
+**Input**
+```text
+todo read book
+deadline return book /by 2026-09-15
+event project meeting /from Mon /to Tue
+find book
+bye
+```
+
+**Expected output**
+```text
+____________________________________________________________
+ _   _    _     ____   ___
+| | | |  / \   | __ )   |  |
+| |_| | / _ \  |  _ \  |  |
+|  _  |/ ___ \ | |_) | |  |
+|_| |_|_/   \_\|____/  _|_
+Hello! I'm HABI.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 task in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Sep 15 2026)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Mon to: Tue)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Sep 15 2026)
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: save a changed task list
 
 **Aim:** Verify commands that change tasks retain their normal console responses while persistence runs.

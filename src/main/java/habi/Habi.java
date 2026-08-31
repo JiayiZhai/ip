@@ -47,6 +47,8 @@ public class Habi {
             case "mark" -> updateTaskStatus(command, true);
             case "unmark" -> updateTaskStatus(command, false);
             case "delete" -> deleteTask(command);
+            case "find" -> ui.showTaskList("Here are the matching tasks in your list:",
+                    tasks.find(Parser.parseFindKeyword(command)));
             case "todo" -> addTask(Parser.parseTodo(command));
             case "deadline" -> addTask(Parser.parseDeadline(command));
             case "event" -> addTask(Parser.parseEvent(command));
