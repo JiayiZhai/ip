@@ -2,7 +2,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Checks HABI's command-line interaction.
@@ -20,6 +23,7 @@ public class HabiTest {
         verifyHabiExceptionIsChecked();
         verifyTaskTypeIcons();
 
+        deleteDataFile();
         String output = runHabi("todo read book\n"
                 + "deadline return book /by Sunday\n"
                 + "event project meeting /from Mon 2pm /to 4pm\n"
@@ -37,6 +41,7 @@ public class HabiTest {
                 "HABI should list an event with its timing.");
         assertContains(output, "Bye. Hope to see you again soon!", "HABI should say goodbye for bye.");
 
+        deleteDataFile();
         String errorOutput = runHabi("\ntodo\ndeadline return book\n"
                 + "event project meeting /from Mon 2pm\nmark two\nmark 1\n"
                 + "todo read book\nmark 2\nunmark 0\nblah\nlist\nbye\n");
@@ -51,6 +56,7 @@ public class HabiTest {
         assertContains(errorOutput, "1.[T][ ] read book",
                 "Invalid commands should not add or change tasks.");
 
+        deleteDataFile();
         String deleteOutput = runHabi("todo read book\n"
                 + "deadline return book /by Sunday\n"
                 + "event project meeting /from Mon /to Tue\n"
@@ -65,6 +71,22 @@ public class HabiTest {
                 "HABI should reject an out-of-range deletion.");
         assertContains(deleteOutput, "2.[E][ ] project meeting (from: Mon to: Tue)",
                 "Deletion should close the numbering gap.");
+
+        verifyTasksPersistAcrossSessions();
+        deleteDataFile();
+    }
+
+    /**
+     * Verifies that tasks and their completion status survive an app restart.
+     */
+    private static void verifyTasksPersistAcrossSessions() {
+        deleteDataFile();
+        runHabi("todo read book\nmark 1\nbye\n");
+
+        String reloadedOutput = runHabi("list\nbye\n");
+
+        assertContains(reloadedOutput, "1.[T][X] read book",
+                "Tasks and their status should persist between sessions.");
     }
 
     /**
@@ -149,6 +171,19 @@ public class HabiTest {
         } finally {
             System.setIn(originalInput);
             System.setOut(originalOutput);
+        }
+    }
+
+    /**
+     * Removes the test data file so independent console scenarios start empty.
+     */
+    private static void deleteDataFile() {
+        Path dataFile = Path.of("data", "habi.txt");
+        try {
+            Files.deleteIfExists(dataFile);
+            Files.deleteIfExists(dataFile.getParent());
+        } catch (IOException exception) {
+            throw new AssertionError("The test data file should be removable.", exception);
         }
     }
 

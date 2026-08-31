@@ -18,8 +18,31 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the event's start value.
+     *
+     * @return event start
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns the event's end value.
+     *
+     * @return event end
+     */
+    public String getTo() {
+        return to;
+    }
+
     @Override
     protected String getTimingDetails() {
         return " (from: " + from + " to: " + to + ")";
+    }
+
+    @Override
+    public String toDataString() {
+        return super.toDataString() + "\t" + from + "\t" + to;
     }
 }
