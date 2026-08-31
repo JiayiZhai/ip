@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -161,11 +162,15 @@ public class Habi {
         String arguments = command.substring("deadline".length()).trim();
         int byPosition = arguments.indexOf(" /by ");
         if (byPosition <= 0 || arguments.substring(byPosition + 5).trim().isEmpty()) {
-            throw new HabiException("OOPS! Use: deadline DESCRIPTION /by DATE_OR_TIME");
+            throw new HabiException("OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
         String description = arguments.substring(0, byPosition).trim();
         String by = arguments.substring(byPosition + 5).trim();
-        addTask(new Deadline(description, by), tasks);
+        try {
+            addTask(new Deadline(description, by), tasks);
+        } catch (DateTimeParseException exception) {
+            throw new HabiException("OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd");
+        }
     }
 
     /**

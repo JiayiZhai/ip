@@ -7,7 +7,7 @@
 **Input**
 ```text
 todo read book
-deadline return book /by Sunday
+deadline return book /by 2026-09-15
 event project meeting /from Mon 2pm /to 4pm
 mark 2
 list
@@ -34,7 +34,7 @@ Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Sep 15 2026)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -44,22 +44,22 @@ Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [D][X] return book (by: Sunday)
+  [D][X] return book (by: Sep 15 2026)
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][X] return book (by: Sunday)
+2.[D][X] return book (by: Sep 15 2026)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Sep 15 2026)
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Sep 15 2026)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
@@ -112,6 +112,7 @@ ____________________________________________________________
 
 todo
 deadline return book
+deadline return book /by 15-09-2026
 event project meeting /from Mon 2pm
 mark two
 mark 1
@@ -141,7 +142,10 @@ ____________________________________________________________
 OOPS! The todo description cannot be empty.
 ____________________________________________________________
 ____________________________________________________________
-OOPS! Use: deadline DESCRIPTION /by DATE_OR_TIME
+OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd
+____________________________________________________________
+____________________________________________________________
+OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd
 ____________________________________________________________
 ____________________________________________________________
 OOPS! Use: event DESCRIPTION /from START /to END
@@ -182,7 +186,7 @@ ____________________________________________________________
 **Input**
 ```text
 todo read book
-deadline return book /by Sunday
+deadline return book /by 2026-09-15
 event project meeting /from Mon /to Tue
 delete 2
 delete 5
@@ -208,7 +212,7 @@ Now you have 1 task in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Sep 15 2026)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -218,7 +222,7 @@ Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Sep 15 2026)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
