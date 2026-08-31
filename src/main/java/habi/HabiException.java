@@ -9,7 +9,7 @@ public class HabiException extends Exception {
     /**
      * Creates an exception with a user-facing explanation.
      *
-     * @param message explanation to display to the user
+     * @param message Explanation to display to the user.
      */
     public HabiException(String message) {
         super(message);
