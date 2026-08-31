@@ -11,7 +11,7 @@ public class Task {
     /**
      * Creates an incomplete task with the given description.
      *
-     * @param description text describing the task
+     * @param description Text describing the task.
      */
     public Task(String description) {
         this(TaskType.TODO, description);
@@ -20,8 +20,8 @@ public class Task {
     /**
      * Creates an incomplete task of the specified kind.
      *
-     * @param type task kind
-     * @param description text describing the task
+     * @param type Task kind.
+     * @param description Text describing the task.
      */
     protected Task(TaskType type, String description) {
         this.type = type;
@@ -46,7 +46,7 @@ public class Task {
     /**
      * Returns the character that represents this task's completion status.
      *
-     * @return {@code X} when completed, or a space when incomplete
+     * @return {@code X} when completed, or a space when incomplete.
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";
@@ -55,7 +55,7 @@ public class Task {
     /**
      * Returns the description of this task.
      *
-     * @return the task description
+     * @return The task description.
      */
     public String getDescription() {
         return description;
@@ -64,7 +64,7 @@ public class Task {
     /**
      * Returns this task's kind for persistence.
      *
-     * @return task kind
+     * @return Task kind.
      */
     public TaskType getType() {
         return type;
@@ -73,7 +73,7 @@ public class Task {
     /**
      * Returns whether this task has been completed.
      *
-     * @return true when completed
+     * @return True when completed.
      */
     public boolean isDone() {
         return isDone;
@@ -82,7 +82,7 @@ public class Task {
     /**
      * Returns the fields shared by every task in the storage format.
      *
-     * @return tab-separated task type, status, and description
+     * @return Tab-separated task type, status, and description.
      */
     public String toDataString() {
         return type.getIcon() + "\t" + (isDone ? "1" : "0") + "\t" + description;
@@ -91,7 +91,7 @@ public class Task {
     /**
      * Returns the one-letter icon for this task type.
      *
-     * @return the todo icon by default
+     * @return The todo icon by default.
      */
     protected String getTypeIcon() {
         return type.getIcon();
@@ -100,7 +100,7 @@ public class Task {
     /**
      * Returns formatted timing details supplied by specialized task types.
      *
-     * @return an empty string for tasks without timing details
+     * @return An empty string for tasks without timing details.
      */
     protected String getTimingDetails() {
         return "";
@@ -109,7 +109,7 @@ public class Task {
     /**
      * Returns the complete user-facing representation of this task.
      *
-     * @return task type, completion status, description, and timing details
+     * @return Task type, completion status, description, and timing details.
      */
     @Override
     public String toString() {

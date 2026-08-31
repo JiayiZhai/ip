@@ -16,8 +16,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline.
      *
-     * @param description text describing the deadline
-     * @param by due date in ISO format
+     * @param description Text describing the deadline.
+     * @param by Due date in ISO format.
      */
     public Deadline(String description, String by) {
         this(description, LocalDate.parse(by));
@@ -26,8 +26,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline with a parsed date.
      *
-     * @param description text describing the deadline
-     * @param by parsed due date
+     * @param description Text describing the deadline.
+     * @param by Parsed due date.
      */
     public Deadline(String description, LocalDate by) {
         super(TaskType.DEADLINE, description);
@@ -37,7 +37,7 @@ public class Deadline extends Task {
     /**
      * Returns the parsed deadline date.
      *
-     * @return deadline value
+     * @return Deadline value.
      */
     public LocalDate getBy() {
         return by;
