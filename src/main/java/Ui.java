@@ -1,0 +1,48 @@
+import java.util.List;
+import java.util.Scanner;
+
+/** Handles all console input and output for HABI. */
+public class Ui {
+    private static final String DIVIDER =
+            "____________________________________________________________";
+    private static final String BANNER = " _   _    _     ____   ___\n"
+            + "| | | |  / \\   | __ )   |  |\n"
+            + "| |_| | / _ \\  |  _ \\  |  |\n"
+            + "|  _  |/ ___ \\ | |_) | |  |\n"
+            + "|_| |_|_/   \\_\\|____/  _|_\n";
+
+    private final Scanner scanner = new Scanner(System.in);
+
+    public boolean hasNextCommand() {
+        return scanner.hasNextLine();
+    }
+
+    public String readCommand() {
+        return scanner.nextLine().trim();
+    }
+
+    public void showGreeting() {
+        System.out.println(DIVIDER);
+        System.out.print(BANNER);
+        System.out.println("Hello! I'm HABI.");
+        System.out.println("What can I do for you?");
+        System.out.println(DIVIDER);
+    }
+
+    public void showResponse(String... lines) {
+        System.out.println(DIVIDER);
+        for (String line : lines) {
+            System.out.println(line);
+        }
+        System.out.println(DIVIDER);
+    }
+
+    public void showTaskList(String heading, List<Task> tasks) {
+        System.out.println(DIVIDER);
+        System.out.println(heading);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + "." + tasks.get(i));
+        }
+        System.out.println(DIVIDER);
+    }
+}

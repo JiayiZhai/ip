@@ -23,6 +23,7 @@ public class HabiTest {
         verifyTaskSubtypes();
         verifyHabiExceptionIsChecked();
         verifyTaskTypeIcons();
+        verifyRequiredComponents();
 
         deleteDataFile();
         String output = runHabi("todo read book\n"
@@ -164,6 +165,28 @@ public class HabiTest {
         assertEquals("T", TaskType.TODO.getIcon(), "TODO should use the T icon.");
         assertEquals("D", TaskType.DEADLINE.getIcon(), "DEADLINE should use the D icon.");
         assertEquals("E", TaskType.EVENT.getIcon(), "EVENT should use the E icon.");
+    }
+
+    /**
+     * Verifies that the required OOP components expose their core operations.
+     */
+    private static void verifyRequiredComponents() {
+        try {
+            TaskList tasks = new TaskList();
+            tasks.add(Parser.parseTodo("todo read book"));
+            assertEquals("1", Integer.toString(tasks.size()),
+                    "TaskList should own added tasks.");
+            assertEquals("[T][ ] read book", tasks.delete(0).toString(),
+                    "TaskList should return a deleted task.");
+            assertEquals("return book",
+                    Parser.parseDeadline("deadline return book /by 2026-09-15")
+                            .getDescription(),
+                    "Parser should construct a validated deadline.");
+            new Storage(Path.of("data", "habi.txt"));
+            new Ui();
+        } catch (HabiException exception) {
+            throw new AssertionError("Valid commands should be parsed.", exception);
+        }
     }
 
     /**
