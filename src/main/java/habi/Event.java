@@ -38,11 +38,13 @@ public class Event extends Task {
         return to;
     }
 
+    /** Returns the formatted start and end details shown after the description. */
     @Override
     protected String getTimingDetails() {
         return " (from: " + from + " to: " + to + ")";
     }
 
+    /** Returns this event in the persistent storage format. */
     @Override
     public String toDataString() {
         return super.toDataString() + "\t" + from + "\t" + to;

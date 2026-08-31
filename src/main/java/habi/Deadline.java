@@ -43,11 +43,13 @@ public class Deadline extends Task {
         return by;
     }
 
+    /** Returns the formatted due-date details shown after the description. */
     @Override
     protected String getTimingDetails() {
         return " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
 
+    /** Returns this deadline in the persistent storage format. */
     @Override
     public String toDataString() {
         return super.toDataString() + "\t" + by;

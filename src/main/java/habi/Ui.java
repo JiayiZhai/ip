@@ -13,16 +13,32 @@ public class Ui {
             + "|  _  |/ ___ \\ | |_) | |  |\n"
             + "|_| |_|_/   \\_\\|____/  _|_\n";
 
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
+    /** Creates a UI that reads commands from standard input. */
+    public Ui() {
+        scanner = new Scanner(System.in);
+    }
+
+    /**
+     * Returns whether another command is available from standard input.
+     *
+     * @return true if another line can be read
+     */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
     }
 
+    /**
+     * Reads and trims the next command from standard input.
+     *
+     * @return the next trimmed command
+     */
     public String readCommand() {
         return scanner.nextLine().trim();
     }
 
+    /** Prints the HABI banner and greeting. */
     public void showGreeting() {
         System.out.println(DIVIDER);
         System.out.print(BANNER);
@@ -31,6 +47,11 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Prints response lines between the standard dividers.
+     *
+     * @param lines response lines to print
+     */
     public void showResponse(String... lines) {
         System.out.println(DIVIDER);
         for (String line : lines) {
@@ -39,6 +60,12 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Prints a heading followed by a numbered task list.
+     *
+     * @param heading heading shown before the tasks
+     * @param tasks tasks to list
+     */
     public void showTaskList(String heading, List<Task> tasks) {
         System.out.println(DIVIDER);
         System.out.println(heading);
