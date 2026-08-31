@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 /**
  * Checks HABI's command-line interaction.
@@ -25,17 +26,17 @@ public class HabiTest {
 
         deleteDataFile();
         String output = runHabi("todo read book\n"
-                + "deadline return book /by Sunday\n"
+                + "deadline return book /by 2026-09-15\n"
                 + "event project meeting /from Mon 2pm /to 4pm\n"
                 + "mark 2\nlist\nunmark 2\nlist\nbye\n");
         assertContains(output, "Nice! I've marked this task as done:",
                 "HABI should confirm marking a task as done.");
-        assertContains(output, "[D][X] return book (by: Sunday)",
+        assertContains(output, "[D][X] return book (by: Sep 15 2026)",
                 "HABI should display a marked deadline as done.");
         assertContains(output, "OK, I've marked this task as not done yet:",
                 "HABI should confirm unmarking a task.");
         assertContains(output, "1.[T][ ] read book", "HABI should list a todo task.");
-        assertContains(output, "2.[D][ ] return book (by: Sunday)",
+        assertContains(output, "2.[D][ ] return book (by: Sep 15 2026)",
                 "HABI should list an unmarked deadline.");
         assertContains(output, "3.[E][ ] project meeting (from: Mon 2pm to: 4pm)",
                 "HABI should list an event with its timing.");
@@ -57,13 +58,20 @@ public class HabiTest {
                 "Invalid commands should not add or change tasks.");
 
         deleteDataFile();
+        String invalidDateOutput = runHabi(
+                "deadline return book /by 15-09-2026\nlist\nbye\n");
+        assertContains(invalidDateOutput,
+                "OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd",
+                "HABI should reject a deadline date in the wrong format.");
+
+        deleteDataFile();
         String deleteOutput = runHabi("todo read book\n"
-                + "deadline return book /by Sunday\n"
+                + "deadline return book /by 2026-09-15\n"
                 + "event project meeting /from Mon /to Tue\n"
                 + "delete 2\ndelete 5\nlist\nbye\n");
         assertContains(deleteOutput, "Noted. I've removed this task:",
                 "HABI should confirm task deletion.");
-        assertContains(deleteOutput, "[D][ ] return book (by: Sunday)",
+        assertContains(deleteOutput, "[D][ ] return book (by: Sep 15 2026)",
                 "HABI should display the removed task.");
         assertContains(deleteOutput, "Now you have 2 tasks in the list.",
                 "HABI should report the remaining task count.");
@@ -114,9 +122,15 @@ public class HabiTest {
      * Verifies that a task renders its type, status, description, and timing.
      */
     private static void verifyTypedTaskRendering() {
-        Task deadline = new Deadline("return book", "Sunday");
-        assertEquals("[D][ ] return book (by: Sunday)", deadline.toString(),
+        Task deadline = new Deadline("return book", "2026-09-15");
+        assertEquals("[D][ ] return book (by: Sep 15 2026)", deadline.toString(),
                 "A deadline should include its type and due date.");
+        try {
+            assertTrue(Deadline.class.getMethod("getBy").getReturnType().equals(LocalDate.class),
+                    "A deadline should expose its due date as LocalDate.");
+        } catch (NoSuchMethodException exception) {
+            throw new AssertionError("Deadline should expose its due date.", exception);
+        }
     }
 
     /**
@@ -125,8 +139,8 @@ public class HabiTest {
     private static void verifyTaskSubtypes() {
         assertEquals("[T][ ] read book", new Todo("read book").toString(),
                 "A todo should use the T type icon.");
-        assertEquals("[D][ ] return book (by: Sunday)",
-                new Deadline("return book", "Sunday").toString(),
+        assertEquals("[D][ ] return book (by: Sep 15 2026)",
+                new Deadline("return book", "2026-09-15").toString(),
                 "A deadline should display its due date.");
         assertEquals("[E][ ] project meeting (from: Mon 2pm to: 4pm)",
                 new Event("project meeting", "Mon 2pm", "4pm").toString(),
