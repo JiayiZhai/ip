@@ -23,7 +23,7 @@ public class Ui {
     /**
      * Returns whether another command is available from standard input.
      *
-     * @return true if another line can be read
+     * @return True if another line can be read.
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
@@ -32,7 +32,7 @@ public class Ui {
     /**
      * Reads and trims the next command from standard input.
      *
-     * @return the next trimmed command
+     * @return The next trimmed command.
      */
     public String readCommand() {
         return scanner.nextLine().trim();
@@ -50,7 +50,7 @@ public class Ui {
     /**
      * Prints response lines between the standard dividers.
      *
-     * @param lines response lines to print
+     * @param lines Response lines to print.
      */
     public void showResponse(String... lines) {
         System.out.println(DIVIDER);
@@ -63,8 +63,8 @@ public class Ui {
     /**
      * Prints a heading followed by a numbered task list.
      *
-     * @param heading heading shown before the tasks
-     * @param tasks tasks to list
+     * @param heading Heading shown before the tasks.
+     * @param tasks Tasks to list.
      */
     public void showTaskList(String heading, List<Task> tasks) {
         System.out.println(DIVIDER);

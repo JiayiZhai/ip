@@ -15,7 +15,7 @@ public class TaskList {
     /**
      * Creates a task list containing tasks loaded from storage.
      *
-     * @param tasks tasks to place in the list
+     * @param tasks Tasks to place in the list.
      */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
@@ -24,7 +24,7 @@ public class TaskList {
     /**
      * Adds a task to the end of the list.
      *
-     * @param task task to add
+     * @param task Task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -33,8 +33,8 @@ public class TaskList {
     /**
      * Returns the task at a zero-based index.
      *
-     * @param index zero-based task index
-     * @return the task at the index
+     * @param index Zero-based task index.
+     * @return The task at the index.
      */
     public Task get(int index) {
         return tasks.get(index);
@@ -43,8 +43,8 @@ public class TaskList {
     /**
      * Removes and returns the task at a zero-based index.
      *
-     * @param index zero-based task index
-     * @return the removed task
+     * @param index Zero-based task index.
+     * @return The removed task.
      */
     public Task delete(int index) {
         return tasks.remove(index);
@@ -53,7 +53,7 @@ public class TaskList {
     /**
      * Returns the number of tasks in the list.
      *
-     * @return task count
+     * @return Task count.
      */
     public int size() {
         return tasks.size();
@@ -62,9 +62,21 @@ public class TaskList {
     /**
      * Returns an unmodifiable snapshot of the current tasks.
      *
-     * @return current tasks in list order
+     * @return Current tasks in list order.
      */
     public List<Task> asList() {
         return List.copyOf(tasks);
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the specified keyword.
+     *
+     * @param keyword Keyword to find in task descriptions.
+     * @return Matching tasks in list order.
+     */
+    public List<Task> find(String keyword) {
+        return tasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .toList();
     }
 }

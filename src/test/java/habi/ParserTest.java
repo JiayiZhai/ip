@@ -34,4 +34,12 @@ public class ParserTest {
         assertThrows(HabiException.class,
                 () -> Parser.parseTaskIndex("mark 4", "mark", 3));
     }
+
+    @Test
+    public void parseFindKeyword_presentAndMissingKeyword_handlesBothCases()
+            throws HabiException {
+        assertEquals("book", Parser.parseFindKeyword("find book"));
+        assertThrows(HabiException.class,
+                () -> Parser.parseFindKeyword("find"));
+    }
 }

@@ -11,7 +11,7 @@ public class Habi {
     /**
      * Creates HABI and loads tasks from the specified data file.
      *
-     * @param filePath path of the data file used for persistence
+     * @param filePath Path of the data file used for persistence.
      */
     public Habi(Path filePath) {
         ui = new Ui();
@@ -53,6 +53,8 @@ public class Habi {
             case "mark" -> updateTaskStatus(command, true);
             case "unmark" -> updateTaskStatus(command, false);
             case "delete" -> deleteTask(command);
+            case "find" -> ui.showTaskList("Here are the matching tasks in your list:",
+                    tasks.find(Parser.parseFindKeyword(command)));
             case "todo" -> addTask(Parser.parseTodo(command));
             case "deadline" -> addTask(Parser.parseDeadline(command));
             case "event" -> addTask(Parser.parseEvent(command));
@@ -95,7 +97,7 @@ public class Habi {
     /**
      * Starts HABI using its relative data file.
      *
-     * @param args command-line arguments, which are not used
+     * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         new Habi(Path.of("data", "habi.txt")).run();

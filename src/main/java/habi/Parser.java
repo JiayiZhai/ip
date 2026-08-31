@@ -12,9 +12,9 @@ public class Parser {
     /**
      * Returns the command word at the start of a non-empty command.
      *
-     * @param command trimmed command entered by the user
-     * @return the first word of the command
-     * @throws HabiException if the command is empty
+     * @param command Trimmed command entered by the user.
+     * @return The first word of the command.
+     * @throws HabiException If the command is empty.
      */
     public static String getKeyword(String command) throws HabiException {
         if (command.isEmpty()) {
@@ -27,9 +27,9 @@ public class Parser {
     /**
      * Parses a todo command with a non-empty description.
      *
-     * @param command todo command entered by the user
-     * @return the parsed todo
-     * @throws HabiException if the description is empty
+     * @param command Todo command entered by the user.
+     * @return The parsed todo.
+     * @throws HabiException If the description is empty.
      */
     public static Todo parseTodo(String command) throws HabiException {
         String description = command.substring("todo".length()).trim();
@@ -42,9 +42,9 @@ public class Parser {
     /**
      * Parses a deadline command containing an ISO date.
      *
-     * @param command deadline command entered by the user
-     * @return the parsed deadline
-     * @throws HabiException if the description, separator, or date is invalid
+     * @param command Deadline command entered by the user.
+     * @return The parsed deadline.
+     * @throws HabiException If the description, separator, or date is invalid.
      */
     public static Deadline parseDeadline(String command) throws HabiException {
         String arguments = command.substring("deadline".length()).trim();
@@ -64,9 +64,9 @@ public class Parser {
     /**
      * Parses an event command containing non-empty start and end values.
      *
-     * @param command event command entered by the user
-     * @return the parsed event
-     * @throws HabiException if a required event value is missing
+     * @param command Event command entered by the user.
+     * @return The parsed event.
+     * @throws HabiException If a required event value is missing.
      */
     public static Event parseEvent(String command) throws HabiException {
         String arguments = command.substring("event".length()).trim();
@@ -89,11 +89,11 @@ public class Parser {
     /**
      * Parses and validates a one-based task number.
      *
-     * @param command command containing the task number
-     * @param keyword command word preceding the number
-     * @param taskCount number of tasks available
-     * @return the corresponding zero-based task index
-     * @throws HabiException if the number is missing, malformed, or out of range
+     * @param command Command containing the task number.
+     * @param keyword Command word preceding the number.
+     * @param taskCount Number of tasks available.
+     * @return The corresponding zero-based task index.
+     * @throws HabiException If the number is missing, malformed, or out of range.
      */
     public static int parseTaskIndex(String command, String keyword, int taskCount)
             throws HabiException {
@@ -112,5 +112,20 @@ public class Parser {
         } catch (NumberFormatException exception) {
             throw new HabiException("OOPS! The task number must be a whole number.");
         }
+    }
+
+    /**
+     * Parses a find command with a non-empty keyword.
+     *
+     * @param command Find command entered by the user.
+     * @return The keyword to find.
+     * @throws HabiException If the keyword is empty.
+     */
+    public static String parseFindKeyword(String command) throws HabiException {
+        String keyword = command.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new HabiException("OOPS! The find keyword cannot be empty.");
+        }
+        return keyword;
     }
 }
