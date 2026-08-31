@@ -1,3 +1,5 @@
+package habi;
+
 import java.nio.file.Path;
 
 /** Coordinates HABI's UI, parser, task list, and storage components. */

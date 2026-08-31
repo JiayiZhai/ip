@@ -73,7 +73,7 @@ def main():
         print(f"ERROR: {error}", file=sys.stderr)
         return 2
 
-    source_files = sorted(Path("src/main/java").glob("*.java"))
+    source_files = sorted(Path("src/main/java").rglob("*.java"))
     if not source_files:
         print("ERROR: No Java source files found in src/main/java.", file=sys.stderr)
         return 2
@@ -94,7 +94,7 @@ def main():
             expected_output = test_case.group("expected") + "\n"
             with tempfile.TemporaryDirectory(prefix="habi-ui-case-") as case_directory:
                 execution = subprocess.run(
-                    ["java", "-cp", absolute_class_directory, "Habi"], input=input_text,
+                    ["java", "-cp", absolute_class_directory, "habi.Habi"], input=input_text,
                     capture_output=True, text=True, check=False, cwd=case_directory,
                 )
             actual_output = normalise(execution.stdout)

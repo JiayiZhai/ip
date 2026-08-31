@@ -1,3 +1,5 @@
+package habi;
+
 /**
  * Identifies each supported task kind and its display icon.
  */

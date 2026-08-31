@@ -1,3 +1,5 @@
+package habi;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -103,7 +105,7 @@ public class HabiTest {
      */
     private static void verifyTaskStatusChanges() {
         try {
-            Class<?> taskClass = Class.forName("Task");
+            Class<?> taskClass = Class.forName("habi.Task");
             Object task = taskClass.getConstructor(String.class).newInstance("read book");
 
             assertEquals(" ", (String) taskClass.getMethod("getStatusIcon").invoke(task),

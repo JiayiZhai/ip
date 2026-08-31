@@ -1,3 +1,5 @@
+package habi;
+
 /**
  * Represents a recoverable error in a command entered for HABI.
  */
