@@ -4,8 +4,11 @@ package habi;
  * Identifies each supported task kind and its display icon.
  */
 public enum TaskType {
+    /** A task without timing details. */
     TODO("T"),
+    /** A task with a due date. */
     DEADLINE("D"),
+    /** A task with start and end values. */
     EVENT("E");
 
     private final String icon;

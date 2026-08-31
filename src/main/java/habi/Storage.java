@@ -11,12 +11,21 @@ import java.util.List;
 public class Storage {
     private final Path filePath;
 
-    /** Creates storage that uses the specified path. */
+    /**
+     * Creates storage that uses the specified path.
+     *
+     * @param filePath path of the task data file
+     */
     public Storage(Path filePath) {
         this.filePath = filePath;
     }
 
-    /** Loads tasks, creating the data directory and file on first use. */
+    /**
+     * Loads tasks, creating the data directory and file on first use.
+     *
+     * @return tasks reconstructed from the data file
+     * @throws HabiException if the data file cannot be read or contains invalid data
+     */
     public ArrayList<Task> load() throws HabiException {
         try {
             createParentDirectory();
@@ -35,7 +44,12 @@ public class Storage {
         }
     }
 
-    /** Saves every task after a successful task-list change. */
+    /**
+     * Saves every task after a successful task-list change.
+     *
+     * @param tasks tasks to write to the data file
+     * @throws HabiException if the data file cannot be written
+     */
     public void save(List<Task> tasks) throws HabiException {
         try {
             createParentDirectory();

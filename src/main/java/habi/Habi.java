@@ -8,7 +8,11 @@ public class Habi {
     private final TaskList tasks;
     private final Ui ui;
 
-    /** Creates HABI and loads tasks from the specified data file. */
+    /**
+     * Creates HABI and loads tasks from the specified data file.
+     *
+     * @param filePath path of the data file used for persistence
+     */
     public Habi(Path filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -22,7 +26,9 @@ public class Habi {
         tasks = loadedTasks;
     }
 
-    /** Runs HABI until input ends or the user enters {@code bye}. */
+    /**
+     * Reads and executes commands until input ends or the user enters {@code bye}.
+     */
     public void run() {
         ui.showGreeting();
         while (ui.hasNextCommand()) {
@@ -86,7 +92,11 @@ public class Habi {
         storage.save(tasks.asList());
     }
 
-    /** Starts HABI using its relative data file. */
+    /**
+     * Starts HABI using its relative data file.
+     *
+     * @param args command-line arguments, which are not used
+     */
     public static void main(String[] args) {
         new Habi(Path.of("data", "habi.txt")).run();
     }
