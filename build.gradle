@@ -24,7 +24,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    failOnNoDiscoveredTests = false
 
     testLogging {
         events 'passed', 'skipped', 'failed'
