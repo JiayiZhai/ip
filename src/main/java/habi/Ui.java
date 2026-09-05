@@ -54,10 +54,18 @@ public class Ui {
      */
     public void showResponse(String... lines) {
         System.out.println(DIVIDER);
-        for (String line : lines) {
-            System.out.println(line);
-        }
+        System.out.println(formatResponse(lines));
         System.out.println(DIVIDER);
+    }
+
+    /**
+     * Formats response lines for either the console or graphical interface.
+     *
+     * @param lines Response lines to format.
+     * @return Response lines separated by the platform line separator.
+     */
+    public static String formatResponse(String... lines) {
+        return String.join(System.lineSeparator(), lines);
     }
 
     /**
@@ -68,10 +76,25 @@ public class Ui {
      */
     public void showTaskList(String heading, List<Task> tasks) {
         System.out.println(DIVIDER);
-        System.out.println(heading);
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
-        }
+        System.out.println(formatTaskList(heading, tasks));
         System.out.println(DIVIDER);
+    }
+
+    /**
+     * Formats a heading followed by a one-based task list.
+     *
+     * @param heading Heading shown before the tasks.
+     * @param tasks Tasks to list.
+     * @return The formatted heading and task list.
+     */
+    public static String formatTaskList(String heading, List<Task> tasks) {
+        StringBuilder response = new StringBuilder(heading);
+        for (int i = 0; i < tasks.size(); i++) {
+            response.append(System.lineSeparator())
+                    .append(i + 1)
+                    .append('.')
+                    .append(tasks.get(i));
+        }
+        return response.toString();
     }
 }
