@@ -67,6 +67,60 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: manage notes
+
+**Aim:** Verify notes can be added, listed, and deleted independently of tasks.
+
+**Input**
+```text
+note buy milk
+note call Mum
+notes
+delete-note 1
+notes
+bye
+```
+
+**Expected output**
+```text
+____________________________________________________________
+ _   _    _     ____   ___
+| | | |  / \   | __ )   |  |
+| |_| | / _ \  |  _ \  |  |
+|  _  |/ ___ \ | |_) | |  |
+|_| |_|_/   \_\|____/  _|_
+Hello! I'm HABI.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this note:
+  [N] buy milk
+Now you have 1 note in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this note:
+  [N] call Mum
+Now you have 2 notes in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the notes in your list:
+1.[N] buy milk
+2.[N] call Mum
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this note:
+  [N] buy milk
+Now you have 1 note in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the notes in your list:
+1.[N] call Mum
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
 ## Test case: find matching tasks
 
 **Aim:** Verify `find` lists only tasks whose descriptions contain the keyword.
