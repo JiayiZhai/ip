@@ -23,9 +23,10 @@ public class HabiTest {
 
         String response = habi.getResponse("todo read book");
 
-        assertEquals("Got it. I've added this task:\n"
-                + "  [T][ ] read book\n"
-                + "Now you have 1 task in the list.", response);
+        assertEquals(lines(
+                "Got it. I've added this task:",
+                "  [T][ ] read book",
+                "Now you have 1 task in the list."), response);
     }
 
     @Test
@@ -34,9 +35,10 @@ public class HabiTest {
 
         String response = habi.getResponse("note buy milk");
 
-        assertEquals("Got it. I've added this note:\n"
-                + "  [N] buy milk\n"
-                + "Now you have 1 note in the list.", response);
+        assertEquals(lines(
+                "Got it. I've added this note:",
+                "  [N] buy milk",
+                "Now you have 1 note in the list."), response);
     }
 
     @Test
@@ -47,9 +49,10 @@ public class HabiTest {
 
         String response = habi.getResponse("notes");
 
-        assertEquals("Here are the notes in your list:\n"
-                + "1.[N] buy milk\n"
-                + "2.[N] call Mum", response);
+        assertEquals(lines(
+                "Here are the notes in your list:",
+                "1.[N] buy milk",
+                "2.[N] call Mum"), response);
     }
 
     @Test
@@ -60,11 +63,13 @@ public class HabiTest {
 
         String response = habi.getResponse("delete-note 1");
 
-        assertEquals("Noted. I've removed this note:\n"
-                + "  [N] buy milk\n"
-                + "Now you have 1 note in the list.", response);
-        assertEquals("Here are the notes in your list:\n"
-                + "1.[N] call Mum", habi.getResponse("notes"));
+        assertEquals(lines(
+                "Noted. I've removed this note:",
+                "  [N] buy milk",
+                "Now you have 1 note in the list."), response);
+        assertEquals(lines(
+                "Here are the notes in your list:",
+                "1.[N] call Mum"), habi.getResponse("notes"));
     }
 
     @Test
@@ -75,8 +80,9 @@ public class HabiTest {
 
         Habi loadedHabi = new Habi(dataFile);
 
-        assertEquals("Here are the notes in your list:\n"
-                + "1.[N] buy milk", loadedHabi.getResponse("notes"));
+        assertEquals(lines(
+                "Here are the notes in your list:",
+                "1.[N] buy milk"), loadedHabi.getResponse("notes"));
     }
 
     @Test
@@ -120,5 +126,9 @@ public class HabiTest {
         assertNotNull(Habi.class.getResource("/view/MainWindow.fxml"));
         assertNotNull(Habi.class.getResource("/view/DialogBox.fxml"));
         assertNotNull(Habi.class.getResource("/view/habi.css"));
+    }
+
+    private static String lines(String... lines) {
+        return String.join(System.lineSeparator(), lines);
     }
 }
