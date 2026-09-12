@@ -9,6 +9,7 @@ public class Parser {
     private static final String DEADLINE_COMMAND = "deadline";
     private static final String EVENT_COMMAND = "event";
     private static final String FIND_COMMAND = "find";
+    private static final String NOTE_COMMAND = "note";
     private static final String DEADLINE_SEPARATOR = " /by ";
     private static final String EVENT_FROM_SEPARATOR = " /from ";
     private static final String EVENT_TO_SEPARATOR = " /to ";
@@ -45,6 +46,21 @@ public class Parser {
             throw new HabiException("OOPS! The todo description cannot be empty.");
         }
         return new Todo(description);
+    }
+
+    /**
+     * Parses a note command with non-empty text.
+     *
+     * @param command Note command entered by the user.
+     * @return The parsed note.
+     * @throws HabiException If the note text is empty.
+     */
+    public static Note parseNote(String command) throws HabiException {
+        String content = getArguments(command, NOTE_COMMAND);
+        if (content.isEmpty()) {
+            throw new HabiException("OOPS! The note cannot be empty.");
+        }
+        return new Note(content);
     }
 
     /**
@@ -108,20 +124,48 @@ public class Parser {
      */
     public static int parseTaskIndex(String command, String keyword, int taskCount)
             throws HabiException {
+        return parseItemIndex(command, keyword, taskCount, "task");
+    }
+
+    /**
+     * Parses and validates a one-based note number.
+     *
+     * @param command Command containing the note number.
+     * @param noteCount Number of notes available.
+     * @return The corresponding zero-based note index.
+     * @throws HabiException If the number is missing, malformed, or out of range.
+     */
+    public static int parseNoteIndex(String command, int noteCount) throws HabiException {
+        return parseItemIndex(command, "delete-note", noteCount, "note");
+    }
+
+    /**
+     * Parses and validates a one-based item number for a command.
+     *
+     * @param command Command containing the item number.
+     * @param keyword Command word preceding the number.
+     * @param itemCount Number of items available.
+     * @param itemName Singular name of the item.
+     * @return The corresponding zero-based item index.
+     * @throws HabiException If the number is missing, malformed, or out of range.
+     */
+    private static int parseItemIndex(String command, String keyword, int itemCount,
+            String itemName) throws HabiException {
         String argument = getArguments(command, keyword);
         if (argument.isEmpty()) {
             throw new HabiException(
-                    "OOPS! Please provide a task number for " + keyword + ".");
+                    "OOPS! Please provide a " + itemName + " number for " + keyword + ".");
         }
         try {
             int taskNumber = Integer.parseInt(argument);
-            if (taskNumber < 1 || taskNumber > taskCount) {
+            if (taskNumber < 1 || taskNumber > itemCount) {
                 throw new HabiException(
-                        "OOPS! Task number " + taskNumber + " is out of range.");
+                        "OOPS! " + capitalize(itemName) + " number " + taskNumber
+                                + " is out of range.");
             }
             return taskNumber - 1;
         } catch (NumberFormatException exception) {
-            throw new HabiException("OOPS! The task number must be a whole number.");
+            throw new HabiException("OOPS! The " + itemName + " number must be a whole number.");
         }
     }
 
@@ -149,5 +193,15 @@ public class Parser {
      */
     private static String getArguments(String command, String keyword) {
         return command.substring(keyword.length()).trim();
+    }
+
+    /**
+     * Returns an item name with an uppercase initial for response text.
+     *
+     * @param itemName Lowercase singular item name.
+     * @return Item name with an uppercase initial.
+     */
+    private static String capitalize(String itemName) {
+        return itemName.substring(0, 1).toUpperCase() + itemName.substring(1);
     }
 }

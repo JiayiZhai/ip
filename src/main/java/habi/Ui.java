@@ -97,4 +97,22 @@ public class Ui {
         }
         return response.toString();
     }
+
+    /**
+     * Formats a heading followed by a one-based note list.
+     *
+     * @param heading Heading shown before the notes.
+     * @param notes Notes to list.
+     * @return The formatted heading and notes in list order.
+     */
+    public static String formatNoteList(String heading, List<Note> notes) {
+        StringBuilder response = new StringBuilder(heading);
+        for (int i = 0; i < notes.size(); i++) {
+            response.append(System.lineSeparator())
+                    .append(i + 1)
+                    .append('.')
+                    .append(notes.get(i));
+        }
+        return response.toString();
+    }
 }
