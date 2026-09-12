@@ -5,6 +5,14 @@ import java.time.format.DateTimeParseException;
 
 /** Parses and validates commands entered by the user. */
 public class Parser {
+    private static final String TODO_COMMAND = "todo";
+    private static final String DEADLINE_COMMAND = "deadline";
+    private static final String EVENT_COMMAND = "event";
+    private static final String FIND_COMMAND = "find";
+    private static final String DEADLINE_SEPARATOR = " /by ";
+    private static final String EVENT_FROM_SEPARATOR = " /from ";
+    private static final String EVENT_TO_SEPARATOR = " /to ";
+
     /** Creates a command parser. */
     public Parser() {
     }
@@ -32,7 +40,7 @@ public class Parser {
      * @throws HabiException If the description is empty.
      */
     public static Todo parseTodo(String command) throws HabiException {
-        String description = command.substring("todo".length()).trim();
+        String description = getArguments(command, TODO_COMMAND);
         if (description.isEmpty()) {
             throw new HabiException("OOPS! The todo description cannot be empty.");
         }
@@ -47,13 +55,15 @@ public class Parser {
      * @throws HabiException If the description, separator, or date is invalid.
      */
     public static Deadline parseDeadline(String command) throws HabiException {
-        String arguments = command.substring("deadline".length()).trim();
-        int byPosition = arguments.indexOf(" /by ");
-        if (byPosition <= 0 || arguments.substring(byPosition + 5).trim().isEmpty()) {
+        String arguments = getArguments(command, DEADLINE_COMMAND);
+        int byPosition = arguments.indexOf(DEADLINE_SEPARATOR);
+        int byStart = byPosition + DEADLINE_SEPARATOR.length();
+        if (byPosition <= 0 || byStart >= arguments.length()
+                || arguments.substring(byStart).trim().isEmpty()) {
             throw new HabiException("OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
         String description = arguments.substring(0, byPosition).trim();
-        String by = arguments.substring(byPosition + 5).trim();
+        String by = arguments.substring(byStart).trim();
         try {
             return new Deadline(description, LocalDate.parse(by));
         } catch (DateTimeParseException exception) {
@@ -69,20 +79,21 @@ public class Parser {
      * @throws HabiException If a required event value is missing.
      */
     public static Event parseEvent(String command) throws HabiException {
-        String arguments = command.substring("event".length()).trim();
-        int fromPosition = arguments.indexOf(" /from ");
-        int toPosition = fromPosition < 0 ? -1 : arguments.indexOf(" /to ", fromPosition + 7);
+        String arguments = getArguments(command, EVENT_COMMAND);
+        int fromPosition = arguments.indexOf(EVENT_FROM_SEPARATOR);
+        int fromStart = fromPosition + EVENT_FROM_SEPARATOR.length();
+        int toPosition = fromPosition < 0 ? -1 : arguments.indexOf(EVENT_TO_SEPARATOR, fromStart);
+        int toStart = toPosition + EVENT_TO_SEPARATOR.length();
         boolean isInvalid = fromPosition <= 0 || toPosition < 0
-                || arguments.substring(fromPosition + 7, Math.max(fromPosition + 7, toPosition))
-                        .trim().isEmpty()
-                || toPosition + 5 >= arguments.length()
-                || arguments.substring(toPosition + 5).trim().isEmpty();
+                || arguments.substring(fromStart, Math.max(fromStart, toPosition)).trim().isEmpty()
+                || toStart >= arguments.length()
+                || arguments.substring(toStart).trim().isEmpty();
         if (isInvalid) {
             throw new HabiException("OOPS! Use: event DESCRIPTION /from START /to END");
         }
         String description = arguments.substring(0, fromPosition).trim();
-        String from = arguments.substring(fromPosition + 7, toPosition).trim();
-        String to = arguments.substring(toPosition + 5).trim();
+        String from = arguments.substring(fromStart, toPosition).trim();
+        String to = arguments.substring(toStart).trim();
         return new Event(description, from, to);
     }
 
@@ -97,7 +108,7 @@ public class Parser {
      */
     public static int parseTaskIndex(String command, String keyword, int taskCount)
             throws HabiException {
-        String argument = command.substring(keyword.length()).trim();
+        String argument = getArguments(command, keyword);
         if (argument.isEmpty()) {
             throw new HabiException(
                     "OOPS! Please provide a task number for " + keyword + ".");
@@ -122,10 +133,21 @@ public class Parser {
      * @throws HabiException If the keyword is empty.
      */
     public static String parseFindKeyword(String command) throws HabiException {
-        String keyword = command.substring("find".length()).trim();
+        String keyword = getArguments(command, FIND_COMMAND);
         if (keyword.isEmpty()) {
             throw new HabiException("OOPS! The find keyword cannot be empty.");
         }
         return keyword;
+    }
+
+    /**
+     * Returns the text following a command keyword.
+     *
+     * @param command Command entered by the user.
+     * @param keyword Command keyword at the start of the command.
+     * @return Trimmed command arguments.
+     */
+    private static String getArguments(String command, String keyword) {
+        return command.substring(keyword.length()).trim();
     }
 }
