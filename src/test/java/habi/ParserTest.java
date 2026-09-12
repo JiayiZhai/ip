@@ -10,6 +10,17 @@ import org.junit.jupiter.api.Test;
 /** Tests command parsing and validation. */
 public class ParserTest {
     @Test
+    public void parseEvent_validValuesWithWhitespace_returnsTrimmedEvent()
+            throws HabiException {
+        Event event = Parser.parseEvent(
+                "event project meeting /from  Mon 2pm  /to  4pm ");
+
+        assertEquals("project meeting", event.getDescription());
+        assertEquals("Mon 2pm", event.getFrom());
+        assertEquals("4pm", event.getTo());
+    }
+
+    @Test
     public void parseDeadline_validIsoDate_returnsDeadline() throws HabiException {
         Deadline deadline = Parser.parseDeadline(
                 "deadline return book /by 2026-09-15");
