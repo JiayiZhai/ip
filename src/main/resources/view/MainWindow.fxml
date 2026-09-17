@@ -56,7 +56,7 @@
                     </children>
                 </HBox>
                 <Label styleClass="command-hint"
-                       text="todo · deadline · event · list · find · mark · unmark · delete · bye"
+                       text="todo · deadline · event · note · list · notes · find · mark · unmark · delete · delete-note · bye"
                        wrapText="true" />
             </children>
         </VBox>

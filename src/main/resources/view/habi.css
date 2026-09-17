@@ -63,6 +63,12 @@
     -fx-border-radius: 14px;
 }
 
+.error-dialog .dialog-label {
+    -fx-background-color: #40272d;
+    -fx-border-color: #6b4047;
+    -fx-border-radius: 14px;
+}
+
 .user-dialog .dialog-label {
     -fx-background-color: #3d5b4d;
 }
@@ -81,6 +87,11 @@
 .habi-dialog .avatar {
     -fx-background-color: #b9e88e;
     -fx-text-fill: #17231d;
+}
+
+.error-dialog .avatar {
+    -fx-background-color: #8a4d52;
+    -fx-text-fill: #fff4f2;
 }
 
 .user-dialog .avatar {

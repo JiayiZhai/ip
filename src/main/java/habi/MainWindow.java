@@ -58,7 +58,9 @@ public class MainWindow {
         String response = habi.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input),
-                DialogBox.getHabiDialog(response));
+                response.startsWith("OOPS!")
+                        ? DialogBox.getErrorDialog(response)
+                        : DialogBox.getHabiDialog(response));
         userInput.clear();
         userInput.requestFocus();
 
