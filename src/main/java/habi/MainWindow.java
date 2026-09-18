@@ -12,7 +12,8 @@ import javafx.util.Duration;
 
 /** Controls command submission and dialog updates in HABI's main window. */
 public class MainWindow {
-    private static final String GREETING = "Hello! I'm HABI.\nWhat can I do for you?";
+    private static final String GREETING =
+            "Hello! I'm HABI, your steady habit-building companion.\nWhat small step can we plan today?";
 
     @FXML
     private ScrollPane scrollPane;

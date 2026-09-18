@@ -108,7 +108,7 @@ public class HabiTest {
     public void getResponse_bye_returnsFarewell() {
         Habi habi = new Habi(tempDirectory.resolve("habi.txt"));
 
-        assertEquals("Bye. Hope to see you again soon!", habi.getResponse("bye"));
+        assertEquals("Bye for now. Small steps build better days—see you soon!", habi.getResponse("bye"));
     }
 
     @Test

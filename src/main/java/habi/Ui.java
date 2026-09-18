@@ -42,8 +42,8 @@ public class Ui {
     public void showGreeting() {
         System.out.println(DIVIDER);
         System.out.print(BANNER);
-        System.out.println("Hello! I'm HABI.");
-        System.out.println("What can I do for you?");
+        System.out.println(
+                "Hello! I'm HABI, your steady habit-building companion.\nWhat small step can we plan today?");
         System.out.println(DIVIDER);
     }
 

@@ -55,7 +55,7 @@ public class Habi {
     public String getResponse(String command) {
         String trimmedCommand = command.trim();
         if (trimmedCommand.equals("bye")) {
-            return "Bye. Hope to see you again soon!";
+            return "Bye for now. Small steps build better days—see you soon!";
         }
         try {
             return handleCommand(trimmedCommand);

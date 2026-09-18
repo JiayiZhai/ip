@@ -24,8 +24,8 @@ ____________________________________________________________
 | |_| | / _ \  |  _ \  |  |
 |  _  |/ ___ \ | |_) | |  |
 |_| |_|_/   \_\|____/  _|_
-Hello! I'm HABI.
-What can I do for you?
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -63,7 +63,7 @@ Here are the tasks in your list:
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
 
@@ -89,8 +89,8 @@ ____________________________________________________________
 | |_| | / _ \  |  _ \  |  |
 |  _  |/ ___ \ | |_) | |  |
 |_| |_|_/   \_\|____/  _|_
-Hello! I'm HABI.
-What can I do for you?
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this note:
@@ -117,7 +117,7 @@ Here are the notes in your list:
 1.[N] call Mum
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
 
@@ -142,8 +142,8 @@ ____________________________________________________________
 | |_| | / _ \  |  _ \  |  |
 |  _  |/ ___ \ | |_) | |  |
 |_| |_|_/   \_\|____/  _|_
-Hello! I'm HABI.
-What can I do for you?
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -166,7 +166,7 @@ Here are the matching tasks in your list:
 2.[D][ ] return book (by: Sep 15 2026)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
 
@@ -189,8 +189,8 @@ ____________________________________________________________
 | |_| | / _ \  |  _ \  |  |
 |  _  |/ ___ \ | |_) | |  |
 |_| |_|_/   \_\|____/  _|_
-Hello! I'm HABI.
-What can I do for you?
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -202,7 +202,7 @@ Nice! I've marked this task as done:
   [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
 
@@ -235,8 +235,8 @@ ____________________________________________________________
 | |_| | / _ \  |  _ \  |  |
 |  _  |/ ___ \ | |_) | |  |
 |_| |_|_/   \_\|____/  _|_
-Hello! I'm HABI.
-What can I do for you?
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
 ____________________________________________________________
 ____________________________________________________________
 OOPS! Please enter a command.
@@ -278,7 +278,7 @@ Here are the tasks in your list:
 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
 
@@ -305,8 +305,8 @@ ____________________________________________________________
 | |_| | / _ \  |  _ \  |  |
 |  _  |/ ___ \ | |_) | |  |
 |_| |_|_/   \_\|____/  _|_
-Hello! I'm HABI.
-What can I do for you?
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -337,6 +337,6 @@ Here are the tasks in your list:
 2.[E][ ] project meeting (from: Mon to: Tue)
 ____________________________________________________________
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
