@@ -59,6 +59,18 @@ public class DialogBox extends HBox {
         return dialogBox;
     }
 
+    /**
+     * Creates a left-aligned dialog for an error response from HABI.
+     *
+     * @param text Error response produced by HABI.
+     * @return Styled error dialog.
+     */
+    public static DialogBox getErrorDialog(String text) {
+        DialogBox dialogBox = getHabiDialog(text);
+        dialogBox.getStyleClass().add("error-dialog");
+        return dialogBox;
+    }
+
     private void flip() {
         ObservableList<Node> children = FXCollections.observableArrayList(getChildren());
         Collections.reverse(children);
