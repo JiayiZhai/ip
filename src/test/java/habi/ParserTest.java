@@ -72,6 +72,14 @@ public class ParserTest {
     }
 
     @Test
+    public void parseEvent_duplicateToSeparator_throwsUsageError() {
+        HabiException exception = assertThrows(HabiException.class, () ->
+                Parser.parseEvent("event project /from Mon /to Tue /to Wed"));
+
+        assertEquals("OOPS! Use: event DESCRIPTION /from START /to END", exception.getMessage());
+    }
+
+    @Test
     public void parseTodo_tabInDescription_throwsHabiException() {
         HabiException exception = assertThrows(HabiException.class, () ->
                 Parser.parseTodo("todo read\tbook"));

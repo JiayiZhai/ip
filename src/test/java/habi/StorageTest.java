@@ -80,4 +80,26 @@ public class StorageTest {
         assertEquals(List.of("N\tbuy milk"),
                 data.getNotes().stream().map(Note::toDataString).toList());
     }
+
+    @Test
+    public void load_malformedRecordVariants_throwDataFileError() throws IOException {
+        List<String> invalidRecords = List.of(
+                "unknown\t0\tread",
+                "T\t0",
+                "D\t0\tread",
+                "E\t0\tmeeting\t09:00",
+                "T\t0\t   ",
+                "D\t0\tread\t   ",
+                "E\t0\tmeeting\t09:00\t   ");
+
+        for (String record : invalidRecords) {
+            Path dataFile = temporaryDirectory.resolve("invalid-" + invalidRecords.indexOf(record));
+            Files.writeString(dataFile, record);
+            Storage storage = new Storage(dataFile);
+
+            HabiException exception = assertThrows(HabiException.class, storage::loadData);
+
+            assertEquals("OOPS! I could not load tasks from the data file.", exception.getMessage());
+        }
+    }
 }
