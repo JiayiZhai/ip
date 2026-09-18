@@ -10,9 +10,11 @@ public class Parser {
     private static final String EVENT_COMMAND = "event";
     private static final String FIND_COMMAND = "find";
     private static final String NOTE_COMMAND = "note";
-    private static final String DEADLINE_SEPARATOR = " /by ";
-    private static final String EVENT_FROM_SEPARATOR = " /from ";
-    private static final String EVENT_TO_SEPARATOR = " /to ";
+    private static final String DEADLINE_SEPARATOR = "/by";
+    private static final String EVENT_FROM_SEPARATOR = "/from";
+    private static final String EVENT_TO_SEPARATOR = "/to";
+    private static final String TAB_ERROR =
+            "OOPS! HABI cannot save text containing tab characters.";
 
     /** Creates a command parser. */
     public Parser() {
@@ -45,6 +47,7 @@ public class Parser {
         if (description.isEmpty()) {
             throw new HabiException("OOPS! The todo description cannot be empty.");
         }
+        validatePersistedText(description);
         return new Todo(description);
     }
 
@@ -60,6 +63,7 @@ public class Parser {
         if (content.isEmpty()) {
             throw new HabiException("OOPS! The note cannot be empty.");
         }
+        validatePersistedText(content);
         return new Note(content);
     }
 
@@ -74,12 +78,17 @@ public class Parser {
         String arguments = getArguments(command, DEADLINE_COMMAND);
         int byPosition = arguments.indexOf(DEADLINE_SEPARATOR);
         int byStart = byPosition + DEADLINE_SEPARATOR.length();
-        if (byPosition <= 0 || byStart >= arguments.length()
-                || arguments.substring(byStart).trim().isEmpty()) {
+        if (byPosition <= 0 || byPosition != arguments.lastIndexOf(DEADLINE_SEPARATOR)
+                || byStart >= arguments.length()) {
             throw new HabiException("OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
         String description = arguments.substring(0, byPosition).trim();
         String by = arguments.substring(byStart).trim();
+        if (description.isEmpty() || by.isEmpty()) {
+            throw new HabiException("OOPS! Use: deadline DESCRIPTION /by yyyy-MM-dd");
+        }
+        validatePersistedText(description);
+        validatePersistedText(by);
         try {
             return new Deadline(description, LocalDate.parse(by));
         } catch (DateTimeParseException exception) {
@@ -98,19 +107,38 @@ public class Parser {
         String arguments = getArguments(command, EVENT_COMMAND);
         int fromPosition = arguments.indexOf(EVENT_FROM_SEPARATOR);
         int fromStart = fromPosition + EVENT_FROM_SEPARATOR.length();
-        int toPosition = fromPosition < 0 ? -1 : arguments.indexOf(EVENT_TO_SEPARATOR, fromStart);
+        int toPosition = arguments.indexOf(EVENT_TO_SEPARATOR);
         int toStart = toPosition + EVENT_TO_SEPARATOR.length();
-        boolean isInvalid = fromPosition <= 0 || toPosition < 0
-                || arguments.substring(fromStart, Math.max(fromStart, toPosition)).trim().isEmpty()
-                || toStart >= arguments.length()
-                || arguments.substring(toStart).trim().isEmpty();
+        boolean isInvalid = fromPosition <= 0 || toPosition < fromStart
+                || fromPosition != arguments.lastIndexOf(EVENT_FROM_SEPARATOR)
+                || toPosition != arguments.lastIndexOf(EVENT_TO_SEPARATOR)
+                || toStart >= arguments.length();
         if (isInvalid) {
             throw new HabiException("OOPS! Use: event DESCRIPTION /from START /to END");
         }
         String description = arguments.substring(0, fromPosition).trim();
         String from = arguments.substring(fromStart, toPosition).trim();
         String to = arguments.substring(toStart).trim();
+        if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+            throw new HabiException("OOPS! Use: event DESCRIPTION /from START /to END");
+        }
+        validatePersistedText(description);
+        validatePersistedText(from);
+        validatePersistedText(to);
         return new Event(description, from, to);
+    }
+
+    /**
+     * Rejects a command that supplies text after a keyword that has no parameters.
+     *
+     * @param command Command to validate.
+     * @param keyword Command keyword at the start of the command.
+     * @throws HabiException If the command contains an argument.
+     */
+    public static void requireNoArguments(String command, String keyword) throws HabiException {
+        if (!getArguments(command, keyword).isEmpty()) {
+            throw new HabiException("OOPS! " + keyword + " does not take any arguments.");
+        }
     }
 
     /**
@@ -193,6 +221,18 @@ public class Parser {
      */
     private static String getArguments(String command, String keyword) {
         return command.substring(keyword.length()).trim();
+    }
+
+    /**
+     * Rejects tabs because they delimit fields in HABI's tab-separated data file.
+     *
+     * @param text Command text that will be written to storage.
+     * @throws HabiException If the text contains a tab character.
+     */
+    private static void validatePersistedText(String text) throws HabiException {
+        if (text.contains("\t")) {
+            throw new HabiException(TAB_ERROR);
+        }
     }
 
     /**

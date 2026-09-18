@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -112,6 +116,27 @@ public class HabiTest {
     }
 
     @Test
+    public void getResponse_listWithArguments_rejectsArguments() {
+        Habi habi = new Habi(tempDirectory.resolve("habi.txt"));
+
+        assertEquals("OOPS! list does not take any arguments.", habi.getResponse("list now"));
+    }
+
+    @Test
+    public void getResponse_notesWithArguments_rejectsArguments() {
+        Habi habi = new Habi(tempDirectory.resolve("habi.txt"));
+
+        assertEquals("OOPS! notes does not take any arguments.", habi.getResponse("notes now"));
+    }
+
+    @Test
+    public void getResponse_byeWithArguments_rejectsArguments() {
+        Habi habi = new Habi(tempDirectory.resolve("habi.txt"));
+
+        assertEquals("OOPS! bye does not take any arguments.", habi.getResponse("bye later"));
+    }
+
+    @Test
     public void getResponse_mutatingCommand_persistsTask() throws IOException {
         Path dataFile = tempDirectory.resolve("habi.txt");
         Habi habi = new Habi(dataFile);
@@ -119,6 +144,49 @@ public class HabiTest {
         habi.getResponse("todo read book");
 
         assertTrue(Files.readString(dataFile).contains("read book"));
+    }
+
+    @Test
+    public void getResponse_mutationAfterFailedLoad_returnsDataFileError() throws IOException {
+        Path dataFile = tempDirectory.resolve("habi.txt");
+        Files.writeString(dataFile, "T\t2\tread book");
+        Habi habi = new Habi(dataFile);
+
+        assertEquals("OOPS! I could not load tasks from the data file. Fix the file before making changes.",
+                habi.getResponse("todo write report"));
+    }
+
+    @Test
+    public void getResponse_mutationAfterFailedLoad_preservesOriginalFile() throws IOException {
+        Path dataFile = tempDirectory.resolve("habi.txt");
+        byte[] originalBytes = "N\tbuy milk\textra\n".getBytes();
+        Files.write(dataFile, originalBytes);
+        Habi habi = new Habi(dataFile);
+
+        habi.getResponse("note call Mum");
+
+        assertEquals(new String(originalBytes), Files.readString(dataFile));
+    }
+
+    @Test
+    public void run_failedLoadShowsErrorAfterGreeting() throws IOException {
+        Path dataFile = tempDirectory.resolve("habi.txt");
+        Files.writeString(dataFile, "T\t2\tread book");
+        InputStream originalInput = System.in;
+        PrintStream originalOutput = System.out;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            System.setIn(new ByteArrayInputStream("bye\n".getBytes()));
+            System.setOut(new PrintStream(output));
+            new Habi(dataFile).run();
+        } finally {
+            System.setIn(originalInput);
+            System.setOut(originalOutput);
+        }
+
+        String session = output.toString();
+        assertTrue(session.indexOf("Hello! I'm HABI")
+                < session.indexOf("OOPS! I could not load tasks from the data file."));
     }
 
     @Test

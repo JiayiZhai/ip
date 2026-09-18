@@ -1,8 +1,11 @@
 package habi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,5 +44,40 @@ public class StorageTest {
 
         assertTrue(tasks.isEmpty());
         assertTrue(dataFile.toFile().isFile());
+    }
+
+    @Test
+    public void load_invalidTaskStatus_throwsDataFileError() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("habi.txt");
+        Files.writeString(dataFile, "T\t2\tread book");
+
+        Storage storage = new Storage(dataFile);
+        HabiException exception = assertThrows(HabiException.class, storage::loadData);
+
+        assertEquals("OOPS! I could not load tasks from the data file.", exception.getMessage());
+    }
+
+    @Test
+    public void loadRecordWithUnexpectedFieldCount_throwsDataFileError() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("habi.txt");
+        Files.writeString(dataFile, "N\tbuy milk\textra");
+
+        Storage storage = new Storage(dataFile);
+        HabiException exception = assertThrows(HabiException.class, storage::loadData);
+
+        assertEquals("OOPS! I could not load tasks from the data file.", exception.getMessage());
+    }
+
+    @Test
+    public void load_blankLinesBetweenRecords_ignoresBlankLines() throws IOException, HabiException {
+        Path dataFile = temporaryDirectory.resolve("habi.txt");
+        Files.writeString(dataFile, "\nT\t0\tread book\n\nN\tbuy milk\n");
+
+        HabiData data = new Storage(dataFile).loadData();
+
+        assertEquals(List.of("T\t0\tread book"),
+                data.getTasks().stream().map(Task::toDataString).toList());
+        assertEquals(List.of("N\tbuy milk"),
+                data.getNotes().stream().map(Note::toDataString).toList());
     }
 }

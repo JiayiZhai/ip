@@ -282,6 +282,43 @@ Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
 
+## Test case: reject arguments for parameterless commands
+
+**Aim:** Verify `list`, `notes`, and `bye` reject extra arguments while a bare `bye` still ends the session.
+
+**Input**
+```text
+list now
+notes now
+bye later
+bye
+```
+
+**Expected output**
+```text
+____________________________________________________________
+ _   _    _     ____   ___
+| | | |  / \   | __ )   |  |
+| |_| | / _ \  |  _ \  |  |
+|  _  |/ ___ \ | |_) | |  |
+|_| |_|_/   \_\|____/  _|_
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
+____________________________________________________________
+____________________________________________________________
+OOPS! list does not take any arguments.
+____________________________________________________________
+____________________________________________________________
+OOPS! notes does not take any arguments.
+____________________________________________________________
+____________________________________________________________
+OOPS! bye does not take any arguments.
+____________________________________________________________
+____________________________________________________________
+Bye for now. Small steps build better days—see you soon!
+____________________________________________________________
+```
+
 ## Test case: delete a task safely
 
 **Aim:** Verify deletion removes the selected task, renumbers the list, and rejects an out-of-range task number.
@@ -340,3 +377,42 @@ ____________________________________________________________
 Bye for now. Small steps build better days—see you soon!
 ____________________________________________________________
 ```
+
+### Manual test case: protect corrupt startup data
+
+**Aim:** Verify HABI reports an unreadable data file at startup and does not overwrite it when a user attempts a mutation.
+
+**Setup**
+```text
+Create `data/habi.txt` containing exactly: `T\t2\tread book\n`.
+```
+
+**Input**
+```text
+todo write report
+bye
+```
+
+**Expected output**
+```text
+____________________________________________________________
+ _   _    _     ____   ___
+| | | |  / \   | __ )   |  |
+| |_| | / _ \  |  _ \  |  |
+|  _  |/ ___ \ | |_) | |  |
+|_| |_|_/   \_\|____/  _|_
+Hello! I'm HABI, your steady habit-building companion.
+What small step can we plan today?
+____________________________________________________________
+____________________________________________________________
+OOPS! I could not load tasks from the data file.
+____________________________________________________________
+____________________________________________________________
+OOPS! I could not load tasks from the data file. Fix the file before making changes.
+____________________________________________________________
+____________________________________________________________
+Bye for now. Small steps build better days—see you soon!
+____________________________________________________________
+```
+
+After the session, verify `data/habi.txt` is byte-for-byte unchanged.

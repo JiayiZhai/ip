@@ -41,6 +41,10 @@ public class MainWindow {
      */
     public void setHabi(Habi habi) {
         this.habi = Objects.requireNonNull(habi);
+        String startupError = habi.getStartupError();
+        if (startupError != null) {
+            dialogContainer.getChildren().add(DialogBox.getErrorDialog(startupError));
+        }
     }
 
     /** Gives keyboard focus to the command field after the window opens. */
